@@ -1,0 +1,722 @@
+{
+  "metadata": {
+    "source_resume_file": "AIML_resume.pdf",
+    "model_used": "Laya Non-Autoregressive Calibration Model",
+    "pipeline_type": "Deterministic Parser -> Laya Calibration Engine -> Enterprise Decision Matrix"
+  },
+  "1_parsed_resume_result": {
+    "candidate_name": "Sudhanshu Shekhar",
+    "summary": "",
+    "experience": "AI/ML Intern, DRC Systems Pvt. Ltd. (GitHub) Dec 2025 – Present\n• Engineered an AI-powered Online Exam Proctoring System leveraging a fine-tuned YOLO model with 95%\ndetection accuracy to identify five violation classes, including multiple faces, phone usage, abnormal head movement,\nspeech, and browser violations during live examinations.\n• Implemented Computer Vision, audio analysis, and behavioral anomaly detection pipelines to deliver real-time alerts,\nrisk scores, and detailed integrity reports with evidence tracking, supporting inference at approximately 30 FPS for\nlow-latency monitoring.\n• Technologies: Python, OpenCV, MediaPipe, YOLO, Machine Learning, Computer Vision, Audio Processing",
+    "education": "Vishwakarma Government Engineering College 2022 – 2026\nComputer Engineering - CGPA: 8.96 Ahmedabad, India",
+    "skills": "Languages: Python, C++, Java, SQL\nAI/ML: Scikit-Learn, TensorFlow, PyTorch, XGBoost, Pandas, NumPy, Matplotlib\nGenAI and LLMs: LangChain, LangGraph, Hugging Face Transformers, RAG, Prompt Engineering, Fine-Tuning\nFrameworks and Databases:FastAPI, Flask, MongoDB, Vector Databases\nTools: Git, GitHub, Groq API",
+    "projects": "Artha Analytics (Live Demo) Feb 2026 – Present\n• Designed an agentic AI platform for financial intelligence using LangGraph and the Groq API to orchestrate parallel\nmulti-agent workflows for stock market analysis and structured report generation.\n• Built an interactive dashboard with NSE ticker validation, time-series visualizations, and automated PDF report export\nthrough a scalable Next.js and FastAPI architecture.\n• Technologies: Next.js, FastAPI, LangGraph, MongoDB, Groq, yfinance, Recharts\nAI Customer Support Chatbot (Model) Dec 2025 – Jan 2026\n• Fine-tuned a T5 Transformer model through instruction-based training on the Bitext Customer Support dataset\ncomprising 26K+ samples to handle queries such as product reviews and order cancellations.\n• Achieved a BLEU score of 35 for context-aware response generation and deployed the model and inference application\nvia Hugging Face Hub and Spaces.\n• Technologies: Python, Hugging Face Transformers, T5, PyTorch, Fine-Tuning, NLP\nSentiscope (Live Demo) Jan 2026 – Feb 2026\n• Built a sentiment classification system benchmarking SVM, Logistic Regression, and Random Forest models to label\ntext as positive or negative.\n• Applied SHAP for model explainability and hosted the pipeline as a REST API and web app.\n• Technologies: Python, Scikit-Learn, SHAP, FastAPI, React",
+    "certifications": "Winner of Hack the Spring, organized by ETH India at Gandhinagar. (Devfolio) (Certificate)\nRanked Top-10 in Smart India Hackathon 2024 at GTU (University Level). (Certificate)\nRecipient of the prestigious Devang Mehta Award for Academic Excellence 2023. (Certificate)\nParticipant in HTM 5.0 Hackathon 2024 at Marwadi University. (Certificate)\nCompleted the Machine Learning and Deep Learning courses from Scaler. (ML Certificate) (DL Certificate)\nEarned Oracle Cloud Infrastructure 2025 Certified Generative AI Professional. (Certificate)",
+    "contact_info": {
+      "email": "sudhanshushekarkumar@gmail.com",
+      "phone": "+91-9104667657",
+      "linkedin": "https://www.linkedin.com/in/sudhanshu-shekhar-kumar/",
+      "github": "https://github.com/Sudhanshu3011",
+      "portfolio": "https://sudhanshu3011.github.io/"
+    },
+    "tech_skills": [
+      "Agentic AI",
+      "C",
+      "C++",
+      "Deep Learning",
+      "Ethereum",
+      "FastAPI",
+      "Fine-Tuning",
+      "Flask",
+      "Git",
+      "Groq API",
+      "Hugging Face",
+      "Java",
+      "JavaScript",
+      "LangChain",
+      "LangGraph",
+      "Large Language Models",
+      "Machine Learning",
+      "Matplotlib",
+      "MediaPipe",
+      "MongoDB",
+      "Natural Language Processing",
+      "Next.js",
+      "NumPy",
+      "OpenCV",
+      "Pandas",
+      "Prompt Engineering",
+      "PyTorch",
+      "Python",
+      "RAG",
+      "REST API",
+      "React",
+      "SQL",
+      "Scikit-Learn",
+      "Spring Boot",
+      "TensorFlow",
+      "Vector Databases",
+      "XGBoost",
+      "YOLO"
+    ],
+    "skills_by_domain": {
+      "genai_llms": [
+        "Agentic AI",
+        "Fine-Tuning",
+        "Groq API",
+        "LangChain",
+        "LangGraph",
+        "Large Language Models",
+        "Prompt Engineering",
+        "RAG",
+        "Vector Databases"
+      ],
+      "languages": [
+        "C",
+        "C++",
+        "Java",
+        "JavaScript",
+        "Python",
+        "SQL"
+      ],
+      "ai_ml_data_science": [
+        "Deep Learning",
+        "Hugging Face",
+        "Machine Learning",
+        "Matplotlib",
+        "MediaPipe",
+        "Natural Language Processing",
+        "NumPy",
+        "OpenCV",
+        "Pandas",
+        "PyTorch",
+        "Scikit-Learn",
+        "TensorFlow",
+        "XGBoost",
+        "YOLO"
+      ],
+      "blockchain_web3": [
+        "Ethereum"
+      ],
+      "backend": [
+        "FastAPI",
+        "Flask",
+        "REST API",
+        "Spring Boot"
+      ],
+      "cloud_devops": [
+        "Git"
+      ],
+      "databases": [
+        "MongoDB"
+      ],
+      "frontend": [
+        "Next.js",
+        "React"
+      ]
+    },
+    "top_recommended_roles": [
+      {
+        "role": "AI / Machine Learning Engineer",
+        "affinity_score": 100.0,
+        "matched_skills": [
+          "Python",
+          "PyTorch",
+          "TensorFlow",
+          "Machine Learning",
+          "Deep Learning",
+          "Scikit-Learn",
+          "OpenCV",
+          "NumPy",
+          "Pandas",
+          "YOLO",
+          "MediaPipe",
+          "Hugging Face",
+          "LangChain",
+          "LangGraph",
+          "RAG",
+          "Vector Databases"
+        ],
+        "missing_skills": [],
+        "description": "Designs, develops, and deploys predictive ML models, deep neural networks, and computer vision / NLP pipelines."
+      },
+      {
+        "role": "Generative AI & LLM Engineer",
+        "affinity_score": 100.0,
+        "matched_skills": [
+          "LangChain",
+          "LangGraph",
+          "RAG",
+          "Vector Databases",
+          "Prompt Engineering",
+          "Fine-Tuning",
+          "Large Language Models",
+          "Hugging Face",
+          "PyTorch",
+          "Python",
+          "FastAPI",
+          "Agentic AI"
+        ],
+        "missing_skills": [
+          "LlamaIndex",
+          "Pinecone",
+          "ChromaDB",
+          "Faiss",
+          "vLLM"
+        ],
+        "description": "Specializes in foundation models, RAG pipelines, fine-tuning, autonomous agents, and vector databases."
+      },
+      {
+        "role": "Data Scientist",
+        "affinity_score": 100.0,
+        "matched_skills": [
+          "Python",
+          "SQL",
+          "Machine Learning",
+          "Pandas",
+          "NumPy",
+          "Scikit-Learn",
+          "Matplotlib",
+          "Deep Learning"
+        ],
+        "missing_skills": [
+          "R",
+          "Seaborn",
+          "Statistics"
+        ],
+        "description": "Applies statistical modeling, exploratory data analysis, and predictive ML to derive actionable insights."
+      }
+    ],
+    "role_affinities": {
+      "AI / Machine Learning Engineer": {
+        "affinity_score": 100.0,
+        "matched_skills": [
+          "Python",
+          "PyTorch",
+          "TensorFlow",
+          "Machine Learning",
+          "Deep Learning",
+          "Scikit-Learn",
+          "OpenCV",
+          "NumPy",
+          "Pandas",
+          "YOLO",
+          "MediaPipe",
+          "Hugging Face",
+          "LangChain",
+          "LangGraph",
+          "RAG",
+          "Vector Databases"
+        ],
+        "missing_skills": [],
+        "description": "Designs, develops, and deploys predictive ML models, deep neural networks, and computer vision / NLP pipelines."
+      },
+      "Generative AI & LLM Engineer": {
+        "affinity_score": 100.0,
+        "matched_skills": [
+          "LangChain",
+          "LangGraph",
+          "RAG",
+          "Vector Databases",
+          "Prompt Engineering",
+          "Fine-Tuning",
+          "Large Language Models",
+          "Hugging Face",
+          "PyTorch",
+          "Python",
+          "FastAPI",
+          "Agentic AI"
+        ],
+        "missing_skills": [
+          "LlamaIndex",
+          "Pinecone",
+          "ChromaDB",
+          "Faiss",
+          "vLLM"
+        ],
+        "description": "Specializes in foundation models, RAG pipelines, fine-tuning, autonomous agents, and vector databases."
+      },
+      "Backend Engineer": {
+        "affinity_score": 52.4,
+        "matched_skills": [
+          "Python",
+          "Java",
+          "FastAPI",
+          "Spring Boot",
+          "MongoDB",
+          "REST API"
+        ],
+        "missing_skills": [
+          "Go",
+          "Node.js",
+          "Django",
+          "Express.js",
+          "NestJS"
+        ],
+        "description": "Architects scalable server-side systems, RESTful APIs, microservices, and database layers."
+      },
+      "Frontend Engineer": {
+        "affinity_score": 42.6,
+        "matched_skills": [
+          "JavaScript",
+          "React",
+          "Next.js"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Vue.js",
+          "Angular",
+          "Tailwind CSS",
+          "HTML5"
+        ],
+        "description": "Builds high-performance, responsive web interfaces, state management, and modern component systems."
+      },
+      "Full Stack Engineer": {
+        "affinity_score": 93.6,
+        "matched_skills": [
+          "React",
+          "Next.js",
+          "Python",
+          "FastAPI",
+          "MongoDB",
+          "REST API",
+          "Git"
+        ],
+        "missing_skills": [
+          "TypeScript",
+          "Node.js",
+          "PostgreSQL",
+          "Docker",
+          "Tailwind CSS"
+        ],
+        "description": "Bridges frontend user experiences with backend services, databases, and deployment pipelines."
+      },
+      "DevOps & Cloud Engineer": {
+        "affinity_score": 6.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "AWS",
+          "Docker",
+          "Kubernetes",
+          "Terraform",
+          "CI/CD"
+        ],
+        "description": "Automates cloud infrastructure, CI/CD deployment pipelines, container orchestration, and reliability."
+      },
+      "Data Engineer": {
+        "affinity_score": 28.5,
+        "matched_skills": [
+          "Python",
+          "SQL"
+        ],
+        "missing_skills": [
+          "Apache Spark",
+          "Apache Airflow",
+          "Apache Kafka",
+          "dbt",
+          "Snowflake"
+        ],
+        "description": "Builds large-scale data ingestion pipelines, warehouse architectures, ETL/ELT flows, and data lakes."
+      },
+      "Data Scientist": {
+        "affinity_score": 100.0,
+        "matched_skills": [
+          "Python",
+          "SQL",
+          "Machine Learning",
+          "Pandas",
+          "NumPy",
+          "Scikit-Learn",
+          "Matplotlib",
+          "Deep Learning"
+        ],
+        "missing_skills": [
+          "R",
+          "Seaborn",
+          "Statistics"
+        ],
+        "description": "Applies statistical modeling, exploratory data analysis, and predictive ML to derive actionable insights."
+      },
+      "Mobile App Engineer": {
+        "affinity_score": 6.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "React Native",
+          "Flutter",
+          "Swift",
+          "Kotlin",
+          "iOS"
+        ],
+        "description": "Engineers native and cross-platform mobile applications for iOS and Android platforms."
+      },
+      "Cybersecurity Engineer": {
+        "affinity_score": 14.3,
+        "matched_skills": [
+          "Python"
+        ],
+        "missing_skills": [
+          "Penetration Testing",
+          "OWASP",
+          "Burp Suite",
+          "Wireshark",
+          "Cryptography"
+        ],
+        "description": "Secures applications, performs vulnerability assessments and pen tests, and monitors enterprise security posture."
+      },
+      "QA & SDET Automation Engineer": {
+        "affinity_score": 31.9,
+        "matched_skills": [
+          "Python",
+          "Java",
+          "JavaScript"
+        ],
+        "missing_skills": [
+          "Selenium",
+          "Cypress",
+          "Playwright",
+          "Pytest",
+          "Jest"
+        ],
+        "description": "Designs automated test suites, end-to-end testing harnesses, performance testing, and QA pipelines."
+      },
+      "Embedded Systems & IoT Engineer": {
+        "affinity_score": 32.8,
+        "matched_skills": [
+          "C",
+          "C++"
+        ],
+        "missing_skills": [
+          "Embedded C",
+          "RTOS",
+          "ARM",
+          "Arduino",
+          "Raspberry Pi"
+        ],
+        "description": "Develops firmware, bare-metal microcontrollers, RTOS drivers, and IoT hardware protocols."
+      },
+      "Blockchain & Web3 Developer": {
+        "affinity_score": 22.1,
+        "matched_skills": [
+          "Ethereum"
+        ],
+        "missing_skills": [
+          "Solidity",
+          "Smart Contracts",
+          "Web3.js",
+          "Ethers.js",
+          "Rust"
+        ],
+        "description": "Builds decentralized applications (dApps), smart contracts, DeFi protocols, and token standards."
+      }
+    },
+    "parser_type": "deterministic_layout_hybrid"
+  },
+  "2_state_given_to_laya": {
+    "candidate_summary_text": "Technical Skills: Agentic AI, C, C++, Deep Learning, Ethereum, FastAPI, Fine-Tuning, Flask, Git, Groq API, Hugging Face, Java, JavaScript, LangChain, LangGraph, Large Language Models, Machine Learning, Matplotlib, MediaPipe, MongoDB, Natural Language Processing, Next.js, NumPy, OpenCV, Pandas, Prompt Engineering, PyTorch, Python, RAG, REST API, React, SQL, Scikit-Learn, Spring Boot, TensorFlow, Vector Databases, XGBoost, YOLO\nTools & Platforms: \nDomains: genai_llms, languages, ai_ml_data_science, blockchain_web3, backend, cloud_devops, databases, frontend\nEducation: Vishwakarma Government Engineering College 2022 – 2026\nComputer Engineering - CGPA: 8.96 Ahmedabad, India\nExperience snippet: AI/ML Intern, DRC Systems Pvt. Ltd. (GitHub) Dec 2025 – Present\n• Engineered an AI-powered Online Exam Proctoring System leveraging a fine-tuned YOLO model with 95%\ndetection accuracy to identify five violation classes, including multiple faces, phone usage, abnormal head movement,\nspeech, and browser violations during live examinations.\n• Implemented Computer Vision, audio analysis, and behavioral anomaly detection pipelines to deliver real-time alerts,\nrisk scores, and detailed integrity reports with evidence tracking, supporting inference at approximately 30 FPS for\nlow-latency monitoring.\n• Technologies: Python, OpenCV, MediaPipe, YOLO, Machine Learning, Computer Vision, Audio Processing",
+    "job_description_snippet": "Senior AI / Machine Learning Engineer\nRole Overview:\nWe are looking for an experienced AI / Machine Learning Engineer to design, build, and deploy production deep learning models and scalable microservices.\n\nKey Responsibilities:\n- Design, train, and fine-tune machine learning and deep learning models (PyTorch, TensorFlow, Scikit-learn).\n- Build high-throughput inference pipelines, REST APIs, and microservices using FastAPI and Docker.\n- Implement Computer Vision / NLP solutions and integrate vector search / RAG pipelines.\n- Deploy and monitor AI services on cloud platforms (AWS / GCP) with robust CI/CD and MLOps.\n\nRequirements:\n- Bachelor's or Master's degree in Computer Science, Engineering, or related technical field.\n- 3+ years of professional hands-on experience in machine learning and Python software engineering.\n- Proficient in Python, PyTorch, Docker, Git, RESTful APIs, and SQL/PostgreSQL.\n- Demonstrated ability with quantifiable production impacts (latency reduction, accuracy improvements).",
+    "combined_prompt_context_sent_to_model": "Candidate:\nTechnical Skills: Agentic AI, C, C++, Deep Learning, Ethereum, FastAPI, Fine-Tuning, Flask, Git, Groq API, Hugging Face, Java, JavaScript, LangChain, LangGraph, Large Language Models, Machine Learning, Matplotlib, MediaPipe, MongoDB, Natural Language Processing, Next.js, NumPy, OpenCV, Pandas, Prompt Engineering, PyTorch, Python, RAG, REST API, React, SQL, Scikit-Learn, Spring Boot, TensorFlow, Vector Databases, XGBoost, YOLO\nTools & Platforms: \nDomains: genai_llms, languages, ai_ml_data_science, blockchain_web3, backend, cloud_devops, databases, frontend\nEducation: Vishwakarma Government Engineering College 2022 – 2026\nComputer Engineering - CGPA: 8.96 Ahmedabad, India\nExperience snippet: AI/ML Intern, DRC Systems Pvt. Ltd. (GitHub) Dec 2025 – Present\n• Engineered an AI-powered Online Exam Proctoring System leveraging a fine-tuned YOLO model with 95%\ndetection accuracy to identify five violation classes, including multiple faces, phone usage, abnormal head movement,\nspeech, and browser violations during live examinations.\n• Implemented Computer Vision, audio analysis, and behavioral anomaly detection pipelines to deliver real-time alerts,\nrisk scores, and detailed integrity reports with evidence tracking, supporting inference at approximately 30 FPS for\nlow-latency monitoring.\n• Technologies: Python, OpenCV, MediaPipe, YOLO, Machine Learning, Computer Vision, Audio Processing\n\nJob Description:\nSenior AI / Machine Learning Engineer\nRole Overview:\nWe are looking for an experienced AI / Machine Learning Engineer to design, build, and deploy production deep learning models and scalable microservices.\n\nKey Responsibilities:\n- Design, train, and fine-tune machine learning and deep learning models (PyTorch, TensorFlow, Scikit-learn).\n- Build high-throughput inference pipelines, REST APIs, and microservices using FastAPI and Docker.\n- Implement Computer Vision / NLP solutions and integrate vector search / RAG pipelines.\n- Deploy and monitor AI services on cloud platforms (AWS / GCP) with robust CI/CD and MLOps.\n\nRequirements:\n- Bachelor's or Master's degree in Computer Science, Engineering, or related technical field.\n- 3+ years of professional hands-on experience in machine learning and Python software engineering.\n- Proficient in Python, PyTorch, Docker, Git, RESTful APIs, and SQL/PostgreSQL.\n- Demonstrated ability with quantifiable production impacts (latency reduction, accuracy improvements).",
+    "laya_model_input_payload": {
+      "text": "Candidate:\nTechnical Skills: Agentic AI, C, C++, Deep Learning, Ethereum, FastAPI, Fine-Tuning, Flask, Git, Groq API, Hugging Face, Java, JavaScript, LangChain, LangGraph, Large Language Models, Machine Learning, Matplotlib, MediaPipe, MongoDB, Natural Language Processing, Next.js, NumPy, OpenCV, Pandas, Prompt Engineering, PyTorch, Python, RAG, REST API, React, SQL, Scikit-Learn, Spring Boot, TensorFlow, Vector Databases, XGBoost, YOLO\nTools & Platforms: \nDomains: genai_llms, languages, ai_ml_data_science, blockchain_web3, backend, cloud_devops, databases, frontend\nEducation: Vishwakarma Government Engineering College 2022 – 2026\nComputer Engineering - CGPA: 8.96 Ahmedabad, India\nExperience snippet: AI/ML Intern, DRC Systems Pvt. Ltd. (GitHub) Dec 2025 – Present\n• Engineered an AI-powered Online Exam Proctoring System leveraging a fine-tuned YOLO model with 95%\ndetection accuracy to identify five violation classes, including multiple faces, phone usage, abnormal head movement,\nspeech, and browser violations during live examinations.\n• Implemented Computer Vision, audio analysis, and behavioral anomaly detection pipelines to deliver real-time alerts,\nrisk scores, and detailed integrity reports with evidence tracking, supporting inference at approximately 30 FPS for\nlow-latency monitoring.\n• Technologies: Python, OpenCV, MediaPipe, YOLO, Machine Learning, Computer Vision, Audio Processing\n\nJob Description:\nSenior AI / Machine Learning Engineer\nRole Overview:\nWe are looking for an experienced AI / Machine Learning Engineer to design, build, and deploy production deep learning models and scalable microservices.\n\nKey Responsibilities:\n- Design, train, and fine-tune machine learning and deep learning models (PyTorch, TensorFlow, Scikit-learn).\n- Build high-throughput inference pipelines, REST APIs, and microservices using FastAPI and Docker.\n- Implement Computer Vision / NLP solutions and integrate vector search / RAG pipelines.\n- Deploy and monitor AI services on cloud platforms (AWS / GCP) with robust CI/CD and MLOps.\n\nRequirements:\n- Bachelor's or Master's degree in Computer Science, Engineering, or related technical field.\n- 3+ years of professional hands-on experience in machine learning and Python software engineering.\n- Proficient in Python, PyTorch, Docker, Git, RESTful APIs, and SQL/PostgreSQL.\n- Demonstrated ability with quantifiable production impacts (latency reduction, accuracy improvements)."
+    },
+    "laya_questions_schema": {
+      "technical_match": {
+        "type": "choice",
+        "instructions": "Evaluate how thoroughly the candidate's technical skills, languages, and frameworks satisfy the core technical requirements listed in the job description.",
+        "criteria": {
+          "high": "Matches nearly all or all essential technical skills, frameworks, and libraries.",
+          "medium": "Matches a substantial portion of skills but misses some key technologies.",
+          "low": "Matches few or none of the required technical skills."
+        }
+      },
+      "experience_match": {
+        "type": "choice",
+        "instructions": "Evaluate the candidate's professional experience, seniority, and role responsibilities against the seniority and duties demanded by the job description.",
+        "criteria": {
+          "high": "Experience level, duties, and seniority strongly meet or exceed expectations.",
+          "medium": "Relevant background, but experience is somewhat junior, partial, or adjacent.",
+          "low": "Insufficient relevant experience or significant seniority mismatch."
+        }
+      },
+      "domain_match": {
+        "type": "choice",
+        "instructions": "Evaluate whether the candidate's industry domain and problem spaces align with the industry, problem domain, and architecture of the target role.",
+        "criteria": {
+          "high": "Directly identical industry domain and architectural specializations.",
+          "medium": "Related technical domain with transferable principles.",
+          "low": "Completely unrelated domain with minimal overlap."
+        }
+      },
+      "evidence_match": {
+        "type": "choice",
+        "instructions": "Evaluate the strength and concreteness of evidence in the candidate's work history, including measurable achievements, deliverables, metrics, and clarity.",
+        "criteria": {
+          "high": "Strong concrete evidence with clear metrics, ownership, and measurable impact.",
+          "medium": "Moderate evidence with descriptive responsibilities but fewer quantifiable metrics.",
+          "low": "Vague, passive, or unsubstantiated bullet points."
+        }
+      }
+    }
+  },
+  "3_raw_laya_output": {
+    "model": "laya-rl-agent",
+    "answers": {
+      "technical_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.6544,
+          "medium": 0.2384,
+          "low": 0.1072
+        },
+        "confidence": 0.2184,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "experience_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.64,
+          "medium": 0.2365,
+          "low": 0.1235
+        },
+        "confidence": 0.1945,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "domain_match": {
+        "type": "choice",
+        "choice": "medium",
+        "probabilities": {
+          "high": 0.4286,
+          "medium": 0.4691,
+          "low": 0.1022
+        },
+        "confidence": 0.134,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "evidence_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.569,
+          "medium": 0.337,
+          "low": 0.0939
+        },
+        "confidence": 0.1721,
+        "action": {
+          "act_probability": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 2048,
+      "output_tokens": 0
+    },
+    "routing": {
+      "model": "english",
+      "repo": "convaiinnovations/laya",
+      "reason": "English Latin text",
+      "detection": {
+        "script": "latin",
+        "script_profile": {
+          "latin": 1.0
+        },
+        "language": "en",
+        "is_english": true,
+        "language_undecided": false,
+        "diacritic_rate": 0.0,
+        "non_latin_fraction": 0.0
+      },
+      "workflow": null
+    }
+  },
+  "4_processed_output": {
+    "calibrated_dimension_breakdown": {
+      "technical_requirements": 79,
+      "experience_requirements": 76,
+      "domain_alignment": 67,
+      "evidence_strength": 74,
+      "education_alignment": 90
+    },
+    "final_score": 7.5,
+    "overall_decision": "Moderate match",
+    "model_confidence_percentage": 72,
+    "technical_overlap_details": {
+      "jd_skills_required": [
+        "AWS",
+        "CI/CD",
+        "Deep Learning",
+        "Docker",
+        "FastAPI",
+        "Git",
+        "Google Cloud Platform",
+        "Machine Learning",
+        "Microservices",
+        "Natural Language Processing",
+        "OpenCV",
+        "PostgreSQL",
+        "PyTorch",
+        "Python",
+        "RAG",
+        "REST API",
+        "SQL",
+        "Scikit-Learn",
+        "TensorFlow"
+      ],
+      "matched_skills": [
+        "Deep Learning",
+        "FastAPI",
+        "Git",
+        "Machine Learning",
+        "Natural Language Processing",
+        "OpenCV",
+        "PyTorch",
+        "Python",
+        "RAG",
+        "REST API",
+        "SQL",
+        "Scikit-Learn",
+        "TensorFlow"
+      ],
+      "missing_jd_skills": [
+        "AWS",
+        "CI/CD",
+        "Docker",
+        "Google Cloud Platform",
+        "Microservices",
+        "PostgreSQL"
+      ],
+      "candidate_bonus_skills": [
+        "Agentic AI",
+        "C",
+        "C++",
+        "Ethereum",
+        "Fine-Tuning",
+        "Flask",
+        "Groq API",
+        "Hugging Face",
+        "Java",
+        "JavaScript",
+        "LangChain",
+        "LangGraph",
+        "Large Language Models",
+        "Matplotlib",
+        "MediaPipe",
+        "MongoDB",
+        "Next.js",
+        "NumPy",
+        "Pandas",
+        "Prompt Engineering",
+        "React",
+        "Spring Boot",
+        "Vector Databases",
+        "XGBoost",
+        "YOLO"
+      ],
+      "skill_overlap_percentage": 68.4
+    },
+    "selection_rejection_matrix": {
+      "verdict": "REVIEW",
+      "verdict_label": "Borderline - Human Recruiter Review",
+      "verdict_tone": "warning",
+      "summary_rationale": "Candidate achieved a moderate composite score of 7.5/10. Technical coverage is 79%, but specific gaps in experience require qualitative evaluation by the hiring manager.",
+      "rules": [
+        {
+          "rule_name": "Core Technical Competency",
+          "dimension": "technical_requirements",
+          "threshold": 70,
+          "candidate_value": 79,
+          "status": "PASS",
+          "description": "Candidate must meet at least 70% of essential technical stack requirements.",
+          "weight": "40%"
+        },
+        {
+          "rule_name": "Seniority & Experience Depth",
+          "dimension": "experience_requirements",
+          "threshold": 65,
+          "candidate_value": 76,
+          "status": "PASS",
+          "description": "Professional history must align with role level and responsibilities.",
+          "weight": "30%"
+        },
+        {
+          "rule_name": "Industry & Architectural Domain Fit",
+          "dimension": "domain_alignment",
+          "threshold": 60,
+          "candidate_value": 67,
+          "status": "PASS",
+          "description": "Familiarity with problem domain, system scale, and architecture.",
+          "weight": "20%"
+        },
+        {
+          "rule_name": "Measurable Impact & Concrete Evidence",
+          "dimension": "evidence_strength",
+          "threshold": 50,
+          "candidate_value": 74,
+          "status": "PASS",
+          "description": "Experience bullet points must contain metrics, ownership, and deliverables.",
+          "weight": "10%"
+        },
+        {
+          "rule_name": "Decision Model Confidence",
+          "dimension": "confidence",
+          "threshold": 75,
+          "candidate_value": 72,
+          "status": "FAIL",
+          "description": "Laya non-autoregressive certainty threshold across question distributions.",
+          "weight": "Meta"
+        },
+        {
+          "rule_name": "Academic & Education Qualifications",
+          "dimension": "education_alignment",
+          "threshold": 60,
+          "candidate_value": 90,
+          "status": "PASS",
+          "description": "Verification of relevant educational qualifications and foundational credentials.",
+          "weight": "Education"
+        }
+      ],
+      "rejection_flags": [],
+      "explainability": {
+        "decision_model": "ConvAI Innovations Laya (Non-Autoregressive)",
+        "formula": "Composite = (Tech * 0.40) + (Exp * 0.30) + (Domain * 0.20) + (Evidence * 0.10)",
+        "latency_benchmark": "0.2s - 0.4s (10-50x faster than generative LLMs)",
+        "hallucination_rate": "0% (Deterministic vector classification vs stochastic token generation)",
+        "calibration_confidence": "72%"
+      }
+    },
+    "diagnostic_career_feedback": {
+      "role_summary": "Your technical profile exhibits a 100.0% alignment with 'AI / Machine Learning Engineer'. Designs, develops, and deploys predictive ML models, deep neural networks, and computer vision / NLP pipelines. Evaluation scored overall readiness at 7.5/10 ('Moderate match').",
+      "target_role": "AI / Machine Learning Engineer",
+      "affinity_score": 100.0,
+      "feedback": [
+        "Target Role Calibration: Evaluated primarily as 'AI / Machine Learning Engineer' with 100.0% affinity.",
+        "Technical Coverage: 16 key skills matched. Identified 0 stack gaps (None).",
+        "Evidence & Impact: Measurable outcomes scored at 74%. Ensure all experience entries specify scale, metrics, and architecture."
+      ],
+      "strengths": [
+        "Strong core competencies verified in Python, PyTorch, TensorFlow, Machine Learning, Deep Learning, establishing solid foundations for AI / Machine Learning Engineer roles.",
+        "High technical stack breadth (79%) satisfies core engineering and framework requirements.",
+        "Professional seniority and project scope (76%) align well with Mid-Level market demands.",
+        "Demonstrated architectural domain overlap (67%) in core problem spaces."
+      ],
+      "growth_areas": [
+        "Minor optimizations: deepen production scaling and distributed architecture patterns in AI / Machine Learning Engineer."
+      ],
+      "actionable_steps": [
+        "Tailor resume summary and headline specifically towards 'AI / Machine Learning Engineer' to maximize ATS keyword scoring."
+      ],
+      "elevation_roadmap": {
+        "days_1_to_30": "Acquire hands-on mastery in cloud deployment and reformat bullet points with concrete metrics.",
+        "days_31_to_60": "Deploy a live, high-throughput service demonstrating AI / Machine Learning Engineer architectural patterns with CI/CD and monitoring.",
+        "days_61_to_90": "Target high-fit applications (100.0%+ match) with custom tailored cover letters emphasizing Python, PyTorch, TensorFlow."
+      },
+      "source": "diagnostic_feedback_engine"
+    }
+  }
+}

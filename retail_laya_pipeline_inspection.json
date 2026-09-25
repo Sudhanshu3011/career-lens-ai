@@ -1,0 +1,514 @@
+{
+  "metadata": {
+    "source_resume_file": "-Retail Management Sales Resume.pdf",
+    "model_used": "Laya Non-Autoregressive Calibration Model",
+    "pipeline_type": "Deterministic Parser -> Laya Calibration Engine -> Enterprise Decision Matrix"
+  },
+  "1_parsed_resume_result": {
+    "candidate_name": "Name John Smith",
+    "summary": "",
+    "experience": "Date Feb 2005 – Current\nEmployer The Retail Company Pty Ltd\nPosition Regional Manager\nKey Responsibilities:\nRetail sales\n•\nInduction, training and development of 48 employees, including 6 Store\n•\nManagers\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nManaging stock takes\n•\nProcessing inventory\n•\nMarketing, merchandising, house keeping, events and displays\n•\nPage 1 of 4\nKey Accomplishments:\nAchieving sales growth of 13.5% over the last 12 months\n•\nIncreasing the average sale by 16% over the last 12 months\n•\nReducing employee turn over by 55%\n•\nImproving merchandising, housekeeping and ticketing standards\n•\nImproving employee morale by a combination of leading from the front\n•\nand taking a more strategic approach to managing the development of my 6\nStore Managers\nReducing direct operating costs by 5% over the last 12 months\n•\nBeing awarded the Most Improved Business Performance Award (attached)\n•\nReason for Leaving:\nNot applicable/Currently employed\n•\nDate Feb 2002 – January 05\nEmployer Another Retail Company Pty Ltd\nPosition Store Manager\nKey Responsibilities:\nRetail sales\n•\nManagement, training and development of 10 team members, including an\n•\nAssistant Store Manager\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nKey Accomplishments:\nAchieving store sales growth of 18% over the last 12 months\n•\nIncreasing the store’s average sale by 18% over the last 12 months\n•\nReducing employee turn over at my store by 40%\n•\nImproving merchandising, housekeeping and ticketing standards\n•\nImproving employee morale by leading from the front\n•\nReducing operating costs at my store by 5% over the last 12 months\n•\nReduced store shrinkage to less than 1%\n•\nBeing awarded the Most Improved Store Manager Award (attached)\n•\nReason for Leaving:\nHaving commenced as a sales person with Another Retail Company Pty Ltd\n•\nin 2002 and then being subsequently promoted to the role of Store Manager\n18 months later, I was confident that I had developed my skills as a Store\nManager over a period of 3 years and was ready to take on a Regional\nManagement opportunity with a new employer\nPage 2 of 4\nDate June 01 – January 02\nEmployer Yet Another Retail Company Pty Ltd\nPosition Sales Assistant\nKey Responsibilities:\nRetail sales\n•\nMeeting and exceeding personal sales targets\n•\nMerchandising, housekeeping and ticketing\n•\nStore security\n•\nStock Take\n•\nKey Accomplishments:\nI exceeding my personal sales budget the vast majority of the time\n•\nMy teamwork skills assisted the store lift its sales performance by 18% over\n•\nthe last 12 months\nReason for Leaving:\n• I left to take up an opportunity with Another Retail Company Pty Ltd as a Store\nManager",
+    "education": "2008 Certificate III in Retail Operations\nEssential Training Services\n2004 Senior First Aid Certificate\nAustralian Red Cross\n2002 Certificate III in Business (Office Administration)\nAdelaide TAFE\nLANGUAGES SPOKEN\nEnglish\n•\nItalian\n•\nHOBBIES/INTERESTS\nMeeting people\n•\nMusic\n•\nTraveling\n•\nPersonal development\n•\nReading\n•\nPage 3 of 4\nREFEREES\nPaul Jones (previous employer)\nGeneral Manager\nAnother Retail Company Pty Ltd\nMobile\nEmail\nSally Brown (previous employer)\nGeneral Manager\nYet Another Retail Company Pty Ltd\nMobile\nEmail\nMike Purple (personal character reference)\nMobile\nEmail\nPlease do not contact my referees without prior notice to myself. Thank you.\nENCLOSURES\nPlease find attached the following information in support of my Confidential Resume:\nCertificate III in Retail Operations – 2008\nThe Retail Company Pty Ltd – Most Improved Business Award – 2007\nAnother Retail Company Pty Ltd – Most Improved Store Manager Award – 2005\nCertificate III in Business (Office Administration) - 2002\nYet Another Retail Company Pty Ltd – Sales Awards – 2002, 2001\nPage 4 of 4",
+    "skills": "A personal passion for retail sales\n•\nCustomer service\n•\nTeam leadership\n•\nProven ability to obtain results\n•\nAbility to build and lead a cohesive and focused team\n•\nMS Word (advanced)\n•\nMS Excel (intermediate)\n•\nMS Power Point (advanced)\n•\nStock Take, Point of Sale & Inventory Management skills\n•\n•\nPublic speaking\n•",
+    "projects": "",
+    "certifications": "",
+    "contact_info": {
+      "email": "",
+      "phone": "",
+      "linkedin": "",
+      "github": "",
+      "portfolio": ""
+    },
+    "tech_skills": [],
+    "skills_by_domain": {},
+    "top_recommended_roles": [
+      {
+        "role": "AI / Machine Learning Engineer",
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Python",
+          "PyTorch",
+          "TensorFlow",
+          "Machine Learning",
+          "Deep Learning"
+        ],
+        "description": "Designs, develops, and deploys predictive ML models, deep neural networks, and computer vision / NLP pipelines."
+      },
+      {
+        "role": "Generative AI & LLM Engineer",
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "LangChain",
+          "LangGraph",
+          "LlamaIndex",
+          "RAG",
+          "Vector Databases"
+        ],
+        "description": "Specializes in foundation models, RAG pipelines, fine-tuning, autonomous agents, and vector databases."
+      },
+      {
+        "role": "Backend Engineer",
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Python",
+          "Java",
+          "Go",
+          "Node.js",
+          "FastAPI"
+        ],
+        "description": "Architects scalable server-side systems, RESTful APIs, microservices, and database layers."
+      }
+    ],
+    "role_affinities": {
+      "AI / Machine Learning Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Python",
+          "PyTorch",
+          "TensorFlow",
+          "Machine Learning",
+          "Deep Learning"
+        ],
+        "description": "Designs, develops, and deploys predictive ML models, deep neural networks, and computer vision / NLP pipelines."
+      },
+      "Generative AI & LLM Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "LangChain",
+          "LangGraph",
+          "LlamaIndex",
+          "RAG",
+          "Vector Databases"
+        ],
+        "description": "Specializes in foundation models, RAG pipelines, fine-tuning, autonomous agents, and vector databases."
+      },
+      "Backend Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Python",
+          "Java",
+          "Go",
+          "Node.js",
+          "FastAPI"
+        ],
+        "description": "Architects scalable server-side systems, RESTful APIs, microservices, and database layers."
+      },
+      "Frontend Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "Next.js",
+          "Vue.js"
+        ],
+        "description": "Builds high-performance, responsive web interfaces, state management, and modern component systems."
+      },
+      "Full Stack Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "React",
+          "Next.js",
+          "TypeScript",
+          "Node.js",
+          "Python"
+        ],
+        "description": "Bridges frontend user experiences with backend services, databases, and deployment pipelines."
+      },
+      "DevOps & Cloud Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "AWS",
+          "Docker",
+          "Kubernetes",
+          "Terraform",
+          "CI/CD"
+        ],
+        "description": "Automates cloud infrastructure, CI/CD deployment pipelines, container orchestration, and reliability."
+      },
+      "Data Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Python",
+          "SQL",
+          "Apache Spark",
+          "Apache Airflow",
+          "Apache Kafka"
+        ],
+        "description": "Builds large-scale data ingestion pipelines, warehouse architectures, ETL/ELT flows, and data lakes."
+      },
+      "Data Scientist": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Python",
+          "R",
+          "SQL",
+          "Machine Learning",
+          "Pandas"
+        ],
+        "description": "Applies statistical modeling, exploratory data analysis, and predictive ML to derive actionable insights."
+      },
+      "Mobile App Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "React Native",
+          "Flutter",
+          "Swift",
+          "Kotlin",
+          "iOS"
+        ],
+        "description": "Engineers native and cross-platform mobile applications for iOS and Android platforms."
+      },
+      "Cybersecurity Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Penetration Testing",
+          "OWASP",
+          "Burp Suite",
+          "Wireshark",
+          "Cryptography"
+        ],
+        "description": "Secures applications, performs vulnerability assessments and pen tests, and monitors enterprise security posture."
+      },
+      "QA & SDET Automation Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Selenium",
+          "Cypress",
+          "Playwright",
+          "Pytest",
+          "Jest"
+        ],
+        "description": "Designs automated test suites, end-to-end testing harnesses, performance testing, and QA pipelines."
+      },
+      "Embedded Systems & IoT Engineer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "C",
+          "C++",
+          "Embedded C",
+          "RTOS",
+          "ARM"
+        ],
+        "description": "Develops firmware, bare-metal microcontrollers, RTOS drivers, and IoT hardware protocols."
+      },
+      "Blockchain & Web3 Developer": {
+        "affinity_score": 0.0,
+        "matched_skills": [],
+        "missing_skills": [
+          "Solidity",
+          "Smart Contracts",
+          "Ethereum",
+          "Web3.js",
+          "Ethers.js"
+        ],
+        "description": "Builds decentralized applications (dApps), smart contracts, DeFi protocols, and token standards."
+      }
+    },
+    "parser_type": "deterministic_layout_hybrid"
+  },
+  "2_state_given_to_laya": {
+    "candidate_summary_text": "Technical Skills: None detected\nTools & Platforms: None detected\nDomains: Retail / Sales Operations\nEducation: 2008 Certificate III in Retail Operations\nEssential Training Services\n2004 Senior First Aid Certificate\nAustralian Red Cross\n2002 Certificate III in Business (Office Administration)\nAdelaide TAFE\nLANGUAGES SPOKEN\nEnglish\n•\nItalian\n•\nHOBBIES/INTERESTS\nMeeting people\n•\nMusic\n•\nTraveling\n•\nPersonal development\n•\nReading\n•\nPage 3 of 4\nREFEREES\nPaul Jones (previous employer)\nGeneral Manager\nAnother Retail Company Pty Ltd\nMobile\nEmail\nSally Brown (previous employer)\nGeneral Manager\nYet Another Retail Company Pty Ltd\nMobile\nEmail\nMike Purple (personal character reference)\nMobile\nEmail\nPlease do not c\nExperience snippet: Date Feb 2005 – Current\nEmployer The Retail Company Pty Ltd\nPosition Regional Manager\nKey Responsibilities:\nRetail sales\n•\nInduction, training and development of 48 employees, including 6 Store\n•\nManagers\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nManaging stock takes\n•\nProcessing inventory\n•\nMarketing, merchandising, house keeping, events and displays\n•\nPage 1 of 4\nKey Accomplishments:\nAchieving sales growth of 13.5% over the last 12 months\n•\nIncreasing the average sale by 16% over the last 12 months\n•\nReducing employee turn over by 55%\n•\nImproving merchandising, housekeeping and ticketing standards\n•\nImproving employee morale by a combination of leading from the front\n•\nand taking a more strategic approach to managing the development of my 6\nStore Managers\nReducing direct operating costs by 5% over the last 12 months\n•\nBeing awarded the Most Improved Business Performance Award (attached)\n•\nReason for Leaving:\nNot applicable/Currently employed\n•\nDate Feb 2002 – January 05\nEmployer Another Retail Company Pty Ltd\nPosition Store Manager\nKey Responsibilities:\nRetail sales\n•\nManagement, training and development of 10 team members, including an\n•\nAssistant Store Manager\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nKey Accomplishments:\nAchieving store sales growth of 18% over the last 12 m",
+    "job_description_snippet": "Senior AI / Machine Learning Engineer\nRole Overview:\nWe are looking for an experienced AI / Machine Learning Engineer to design, build, and deploy production deep learning models and scalable microservices.\n\nKey Responsibilities:\n- Design, train, and fine-tune machine learning and deep learning models (PyTorch, TensorFlow, Scikit-learn).\n- Build high-throughput inference pipelines, REST APIs, and microservices using FastAPI and Docker.\n- Implement Computer Vision / NLP solutions and integrate vector search / RAG pipelines.\n- Deploy and monitor AI services on cloud platforms (AWS / GCP) with robust CI/CD and MLOps.\n\nRequirements:\n- Bachelor's or Master's degree in Computer Science, Engineering, or related technical field.\n- 3+ years of professional hands-on experience in machine learning and Python software engineering.\n- Proficient in Python, PyTorch, Docker, Git, RESTful APIs, and SQL/PostgreSQL.\n- Demonstrated ability with quantifiable production impacts (latency reduction, accuracy improvements).",
+    "combined_prompt_context_sent_to_model": "Candidate:\nTechnical Skills: None detected\nTools & Platforms: None detected\nDomains: Retail / Sales Operations\nEducation: 2008 Certificate III in Retail Operations\nEssential Training Services\n2004 Senior First Aid Certificate\nAustralian Red Cross\n2002 Certificate III in Business (Office Administration)\nAdelaide TAFE\nLANGUAGES SPOKEN\nEnglish\n•\nItalian\n•\nHOBBIES/INTERESTS\nMeeting people\n•\nMusic\n•\nTraveling\n•\nPersonal development\n•\nReading\n•\nPage 3 of 4\nREFEREES\nPaul Jones (previous employer)\nGeneral Manager\nAnother Retail Company Pty Ltd\nMobile\nEmail\nSally Brown (previous employer)\nGeneral Manager\nYet Another Retail Company Pty Ltd\nMobile\nEmail\nMike Purple (personal character reference)\nMobile\nEmail\nPlease do not c\nExperience snippet: Date Feb 2005 – Current\nEmployer The Retail Company Pty Ltd\nPosition Regional Manager\nKey Responsibilities:\nRetail sales\n•\nInduction, training and development of 48 employees, including 6 Store\n•\nManagers\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nManaging stock takes\n•\nProcessing inventory\n•\nMarketing, merchandising, house keeping, events and displays\n•\nPage 1 of 4\nKey Accomplishments:\nAchieving sales growth of 13.5% over the last 12 months\n•\nIncreasing the average sale by 16% over the last 12 months\n•\nReducing employee turn over by 55%\n•\nImproving merchandising, housekeeping and ticketing standards\n•\nImproving employee morale by a combination of leading from the front\n•\nand taking a more strategic approach to managing the development of my 6\nStore Managers\nReducing direct operating costs by 5% over the last 12 months\n•\nBeing awarded the Most Improved Business Performance Award (attached)\n•\nReason for Leaving:\nNot applicable/Currently employed\n•\nDate Feb 2002 – January 05\nEmployer Another Retail Company Pty Ltd\nPosition Store Manager\nKey Responsibilities:\nRetail sales\n•\nManagement, training and development of 10 team members, including an\n•\nAssistant Store Manager\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nKey Accomplishments:\nAchieving store sales growth of 18% over the last 12 m\n\nJob Description:\nSenior AI / Machine Learning Engineer\nRole Overview:\nWe are looking for an experienced AI / Machine Learning Engineer to design, build, and deploy production deep learning models and scalable microservices.\n\nKey Responsibilities:\n- Design, train, and fine-tune machine learning and deep learning models (PyTorch, TensorFlow, Scikit-learn).\n- Build high-throughput inference pipelines, REST APIs, and microservices using FastAPI and Docker.\n- Implement Computer Vision / NLP solutions and integrate vector search / RAG pipelines.\n- Deploy and monitor AI services on cloud platforms (AWS / GCP) with robust CI/CD and MLOps.\n\nRequirements:\n- Bachelor's or Master's degree in Computer Science, Engineering, or related technical field.\n- 3+ years of professional hands-on experience in machine learning and Python software engineering.\n- Proficient in Python, PyTorch, Docker, Git, RESTful APIs, and SQL/PostgreSQL.\n- Demonstrated ability with quantifiable production impacts (latency reduction, accuracy improvements).",
+    "laya_model_input_payload": {
+      "text": "Candidate:\nTechnical Skills: None detected\nTools & Platforms: None detected\nDomains: Retail / Sales Operations\nEducation: 2008 Certificate III in Retail Operations\nEssential Training Services\n2004 Senior First Aid Certificate\nAustralian Red Cross\n2002 Certificate III in Business (Office Administration)\nAdelaide TAFE\nLANGUAGES SPOKEN\nEnglish\n•\nItalian\n•\nHOBBIES/INTERESTS\nMeeting people\n•\nMusic\n•\nTraveling\n•\nPersonal development\n•\nReading\n•\nPage 3 of 4\nREFEREES\nPaul Jones (previous employer)\nGeneral Manager\nAnother Retail Company Pty Ltd\nMobile\nEmail\nSally Brown (previous employer)\nGeneral Manager\nYet Another Retail Company Pty Ltd\nMobile\nEmail\nMike Purple (personal character reference)\nMobile\nEmail\nPlease do not c\nExperience snippet: Date Feb 2005 – Current\nEmployer The Retail Company Pty Ltd\nPosition Regional Manager\nKey Responsibilities:\nRetail sales\n•\nInduction, training and development of 48 employees, including 6 Store\n•\nManagers\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nManaging stock takes\n•\nProcessing inventory\n•\nMarketing, merchandising, house keeping, events and displays\n•\nPage 1 of 4\nKey Accomplishments:\nAchieving sales growth of 13.5% over the last 12 months\n•\nIncreasing the average sale by 16% over the last 12 months\n•\nReducing employee turn over by 55%\n•\nImproving merchandising, housekeeping and ticketing standards\n•\nImproving employee morale by a combination of leading from the front\n•\nand taking a more strategic approach to managing the development of my 6\nStore Managers\nReducing direct operating costs by 5% over the last 12 months\n•\nBeing awarded the Most Improved Business Performance Award (attached)\n•\nReason for Leaving:\nNot applicable/Currently employed\n•\nDate Feb 2002 – January 05\nEmployer Another Retail Company Pty Ltd\nPosition Store Manager\nKey Responsibilities:\nRetail sales\n•\nManagement, training and development of 10 team members, including an\n•\nAssistant Store Manager\nAchieving sales budgets\n•\nProviding superior customer service\n•\nManaging costs and outgoings\n•\nParticipating in monthly management meetings\n•\nKey Accomplishments:\nAchieving store sales growth of 18% over the last 12 m\n\nJob Description:\nSenior AI / Machine Learning Engineer\nRole Overview:\nWe are looking for an experienced AI / Machine Learning Engineer to design, build, and deploy production deep learning models and scalable microservices.\n\nKey Responsibilities:\n- Design, train, and fine-tune machine learning and deep learning models (PyTorch, TensorFlow, Scikit-learn).\n- Build high-throughput inference pipelines, REST APIs, and microservices using FastAPI and Docker.\n- Implement Computer Vision / NLP solutions and integrate vector search / RAG pipelines.\n- Deploy and monitor AI services on cloud platforms (AWS / GCP) with robust CI/CD and MLOps.\n\nRequirements:\n- Bachelor's or Master's degree in Computer Science, Engineering, or related technical field.\n- 3+ years of professional hands-on experience in machine learning and Python software engineering.\n- Proficient in Python, PyTorch, Docker, Git, RESTful APIs, and SQL/PostgreSQL.\n- Demonstrated ability with quantifiable production impacts (latency reduction, accuracy improvements)."
+    },
+    "laya_questions_schema": {
+      "technical_match": {
+        "type": "choice",
+        "instructions": "Evaluate how thoroughly the candidate's technical skills, languages, and frameworks satisfy the core technical requirements listed in the job description.",
+        "criteria": {
+          "high": "Matches nearly all or all essential technical skills, frameworks, and libraries.",
+          "medium": "Matches a substantial portion of skills but misses some key technologies.",
+          "low": "Matches few or none of the required technical skills."
+        }
+      },
+      "experience_match": {
+        "type": "choice",
+        "instructions": "Evaluate the candidate's professional experience, seniority, and role responsibilities against the seniority and duties demanded by the job description.",
+        "criteria": {
+          "high": "Experience level, duties, and seniority strongly meet or exceed expectations.",
+          "medium": "Relevant background, but experience is somewhat junior, partial, or adjacent.",
+          "low": "Insufficient relevant experience or significant seniority mismatch."
+        }
+      },
+      "domain_match": {
+        "type": "choice",
+        "instructions": "Evaluate whether the candidate's industry domain and problem spaces align with the industry, problem domain, and architecture of the target role.",
+        "criteria": {
+          "high": "Directly identical industry domain and architectural specializations.",
+          "medium": "Related technical domain with transferable principles.",
+          "low": "Completely unrelated domain with minimal overlap."
+        }
+      },
+      "evidence_match": {
+        "type": "choice",
+        "instructions": "Evaluate the strength and concreteness of evidence in the candidate's work history, including measurable achievements, deliverables, metrics, and clarity.",
+        "criteria": {
+          "high": "Strong concrete evidence with clear metrics, ownership, and measurable impact.",
+          "medium": "Moderate evidence with descriptive responsibilities but fewer quantifiable metrics.",
+          "low": "Vague, passive, or unsubstantiated bullet points."
+        }
+      }
+    }
+  },
+  "3_raw_laya_output": {
+    "model": "laya-rl-agent",
+    "answers": {
+      "technical_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.3684,
+          "medium": 0.3596,
+          "low": 0.272
+        },
+        "confidence": 0.008,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "experience_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.6234,
+          "medium": 0.228,
+          "low": 0.1486
+        },
+        "confidence": 0.1671,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "domain_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.5231,
+          "medium": 0.3721,
+          "low": 0.1048
+        },
+        "confidence": 0.1414,
+        "action": {
+          "act_probability": 1.0
+        }
+      },
+      "evidence_match": {
+        "type": "choice",
+        "choice": "high",
+        "probabilities": {
+          "high": 0.7486,
+          "medium": 0.1823,
+          "low": 0.0691
+        },
+        "confidence": 0.3522,
+        "action": {
+          "act_probability": 1.0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 2048,
+      "output_tokens": 0
+    },
+    "routing": {
+      "model": "english",
+      "repo": "convaiinnovations/laya",
+      "reason": "English Latin text",
+      "detection": {
+        "script": "latin",
+        "script_profile": {
+          "latin": 1.0
+        },
+        "language": "en",
+        "is_english": true,
+        "language_undecided": false,
+        "diacritic_rate": 0.0,
+        "non_latin_fraction": 0.0
+      },
+      "workflow": null
+    }
+  },
+  "4_processed_output": {
+    "calibrated_dimension_breakdown": {
+      "technical_requirements": 67,
+      "experience_requirements": 74,
+      "domain_alignment": 66,
+      "evidence_strength": 79,
+      "education_alignment": 70
+    },
+    "final_score": 7.0,
+    "overall_decision": "Moderate match",
+    "model_confidence_percentage": 72,
+    "technical_overlap_details": {
+      "jd_skills_required": [
+        "AWS",
+        "CI/CD",
+        "Deep Learning",
+        "Docker",
+        "FastAPI",
+        "Git",
+        "Google Cloud Platform",
+        "Machine Learning",
+        "Microservices",
+        "Natural Language Processing",
+        "OpenCV",
+        "PostgreSQL",
+        "PyTorch",
+        "Python",
+        "RAG",
+        "REST API",
+        "SQL",
+        "Scikit-Learn",
+        "TensorFlow"
+      ],
+      "matched_skills": [],
+      "missing_jd_skills": [
+        "AWS",
+        "CI/CD",
+        "Deep Learning",
+        "Docker",
+        "FastAPI",
+        "Git",
+        "Google Cloud Platform",
+        "Machine Learning",
+        "Microservices",
+        "Natural Language Processing",
+        "OpenCV",
+        "PostgreSQL",
+        "PyTorch",
+        "Python",
+        "RAG",
+        "REST API",
+        "SQL",
+        "Scikit-Learn",
+        "TensorFlow"
+      ],
+      "candidate_bonus_skills": [],
+      "skill_overlap_percentage": 0.0
+    },
+    "selection_rejection_matrix": {
+      "verdict": "REVIEW",
+      "verdict_label": "Borderline - Human Recruiter Review",
+      "verdict_tone": "warning",
+      "summary_rationale": "Candidate achieved a moderate composite score of 7.0/10. Technical coverage is 67%, but specific gaps in Partial Technical Coverage require qualitative evaluation by the hiring manager.",
+      "rules": [
+        {
+          "rule_name": "Core Technical Competency",
+          "dimension": "technical_requirements",
+          "threshold": 70,
+          "candidate_value": 67,
+          "status": "BORDERLINE",
+          "description": "Candidate must meet at least 70% of essential technical stack requirements.",
+          "weight": "40%"
+        },
+        {
+          "rule_name": "Seniority & Experience Depth",
+          "dimension": "experience_requirements",
+          "threshold": 65,
+          "candidate_value": 74,
+          "status": "PASS",
+          "description": "Professional history must align with role level and responsibilities.",
+          "weight": "30%"
+        },
+        {
+          "rule_name": "Industry & Architectural Domain Fit",
+          "dimension": "domain_alignment",
+          "threshold": 60,
+          "candidate_value": 66,
+          "status": "PASS",
+          "description": "Familiarity with problem domain, system scale, and architecture.",
+          "weight": "20%"
+        },
+        {
+          "rule_name": "Measurable Impact & Concrete Evidence",
+          "dimension": "evidence_strength",
+          "threshold": 50,
+          "candidate_value": 79,
+          "status": "PASS",
+          "description": "Experience bullet points must contain metrics, ownership, and deliverables.",
+          "weight": "10%"
+        },
+        {
+          "rule_name": "Decision Model Confidence",
+          "dimension": "confidence",
+          "threshold": 75,
+          "candidate_value": 72,
+          "status": "FAIL",
+          "description": "Laya non-autoregressive certainty threshold across question distributions.",
+          "weight": "Meta"
+        },
+        {
+          "rule_name": "Academic & Education Qualifications",
+          "dimension": "education_alignment",
+          "threshold": 60,
+          "candidate_value": 70,
+          "status": "PASS",
+          "description": "Verification of relevant educational qualifications and foundational credentials.",
+          "weight": "Education"
+        }
+      ],
+      "rejection_flags": [
+        {
+          "code": "TECH_IMPROVEMENT_NEEDED",
+          "label": "Partial Technical Coverage",
+          "severity": "MODERATE",
+          "explanation": "Technical coverage (67%) is below preferred 70% interview bar."
+        }
+      ],
+      "explainability": {
+        "decision_model": "ConvAI Innovations Laya (Non-Autoregressive)",
+        "formula": "Composite = (Tech * 0.40) + (Exp * 0.30) + (Domain * 0.20) + (Evidence * 0.10)",
+        "latency_benchmark": "0.2s - 0.4s (10-50x faster than generative LLMs)",
+        "hallucination_rate": "0% (Deterministic vector classification vs stochastic token generation)",
+        "calibration_confidence": "72%"
+      }
+    },
+    "diagnostic_career_feedback": {
+      "role_summary": "Your technical profile exhibits a 0.0% alignment with 'AI / Machine Learning Engineer'. Designs, develops, and deploys predictive ML models, deep neural networks, and computer vision / NLP pipelines. Evaluation scored overall readiness at 7.0/10 ('Moderate match').",
+      "target_role": "AI / Machine Learning Engineer",
+      "affinity_score": 0.0,
+      "feedback": [
+        "Target Role Calibration: Evaluated primarily as 'AI / Machine Learning Engineer' with 0.0% affinity.",
+        "Technical Coverage: 0 key skills matched. Identified 5 stack gaps (Python, PyTorch, TensorFlow).",
+        "Evidence & Impact: Measurable outcomes scored at 79%. Ensure all experience entries specify scale, metrics, and architecture.",
+        "Rejection Risk: 1 flagged items require immediate resume remediation before applying."
+      ],
+      "strengths": [
+        "Professional seniority and project scope (74%) align well with Mid-Level market demands.",
+        "Demonstrated architectural domain overlap (66%) in core problem spaces."
+      ],
+      "growth_areas": [
+        "Critical Gap Identified: Partial Technical Coverage.",
+        "Missing essential technologies for AI / Machine Learning Engineer: Python, PyTorch, TensorFlow, Machine Learning."
+      ],
+      "actionable_steps": [
+        "Prioritize building production projects utilizing Python, PyTorch, TensorFlow and Machine Learning to close core AI / Machine Learning Engineer technical deficits.",
+        "Tailor resume summary and headline specifically towards 'AI / Machine Learning Engineer' to maximize ATS keyword scoring."
+      ],
+      "elevation_roadmap": {
+        "days_1_to_30": "Acquire hands-on mastery in Python and reformat bullet points with concrete metrics.",
+        "days_31_to_60": "Deploy a live, high-throughput service demonstrating AI / Machine Learning Engineer architectural patterns with CI/CD and monitoring.",
+        "days_61_to_90": "Target high-fit applications (0.0%+ match) with custom tailored cover letters emphasizing core stack."
+      },
+      "source": "diagnostic_feedback_engine"
+    }
+  }
+}
