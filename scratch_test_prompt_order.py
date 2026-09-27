@@ -62,7 +62,17 @@ res_b1 = agent_inst.system_one(prompt_b, {"q": q_specific})
 res_a2 = agent_inst.system_one(prompt_a, {"q": q_generic})
 res_b2 = agent_inst.system_one(prompt_b, {"q": q_generic})
 
-print("Prompt A (JD first) + Specific criteria:", res_a1["answers"]["q"]["probabilities"])
-print("Prompt B (Candidate first) + Specific criteria:", res_b1["answers"]["q"]["probabilities"])
-print("Prompt A (JD first) + Generic criteria:", res_a2["answers"]["q"]["probabilities"])
-print("Prompt B (Candidate first) + Generic criteria:", res_b2["answers"]["q"]["probabilities"])
+print(
+    "Prompt A (JD first) + Specific criteria:", res_a1["answers"]["q"]["probabilities"]
+)
+print(
+    "Prompt B (Candidate first) + Specific criteria:",
+    res_b1["answers"]["q"]["probabilities"],
+)
+print(
+    "Prompt A (JD first) + Generic criteria:", res_a2["answers"]["q"]["probabilities"]
+)
+print(
+    "Prompt B (Candidate first) + Generic criteria:",
+    res_b2["answers"]["q"]["probabilities"],
+)
