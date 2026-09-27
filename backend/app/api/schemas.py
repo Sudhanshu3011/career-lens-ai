@@ -10,45 +10,82 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
-
 # ---------------------------------------------------------------------------
 # Decision & Scoring Schemas
 # ---------------------------------------------------------------------------
+
 
 class ParameterDetailSchema(BaseModel):
     p_high: float = Field(..., description="Laya probability for high match")
     p_mid: float = Field(..., description="Laya probability for mid/medium match")
     p_low: float = Field(..., description="Laya probability for low match")
-    selected_prob: float = Field(..., description="Selected probability: max(p_high, p_mid)")
-    weight: float = Field(..., description="Active weight triggered by JD seniority tier")
-    weighted_score: float = Field(..., description="Contribution score: selected_prob * weight")
-    is_high_hit: bool = Field(..., description="Whether candidate hit high as dominant choice")
+    selected_prob: float = Field(
+        ..., description="Selected probability: max(p_high, p_mid)"
+    )
+    weight: float = Field(
+        ..., description="Active weight triggered by JD seniority tier"
+    )
+    weighted_score: float = Field(
+        ..., description="Contribution score: selected_prob * weight"
+    )
+    is_high_hit: bool = Field(
+        ..., description="Whether candidate hit high as dominant choice"
+    )
     percentage: int = Field(..., description="Display percentage (0-100)")
 
     model_config = ConfigDict(extra="allow")
 
 
 class DecisionBreakdownSchema(BaseModel):
-    technical_requirements: int = Field(..., description="Percentage match for technical skills and tools")
-    experience_requirements: int = Field(..., description="Percentage match for role experience and seniority")
-    domain_alignment: int = Field(..., description="Percentage alignment with industry/problem domain")
-    education_alignment: int = Field(70, description="Percentage alignment for academic and education credentials")
-    evidence_strength: int = Field(..., description="Percentage score for concrete proof and metrics in resume")
+    technical_requirements: int = Field(
+        ..., description="Percentage match for technical skills and tools"
+    )
+    experience_requirements: int = Field(
+        ..., description="Percentage match for role experience and seniority"
+    )
+    domain_alignment: int = Field(
+        ..., description="Percentage alignment with industry/problem domain"
+    )
+    education_alignment: int = Field(
+        70, description="Percentage alignment for academic and education credentials"
+    )
+    evidence_strength: int = Field(
+        ..., description="Percentage score for concrete proof and metrics in resume"
+    )
 
     model_config = ConfigDict(extra="allow")
 
 
 class ScoreEvaluationSchema(BaseModel):
-    final_score: Optional[float] = Field(default=None, description="Calibrated unified score on 0 to 10 scale")
-    fit_score: Optional[float] = Field(default=None, description="Calibrated fit percentage on 0 to 100 scale")
-    overall_decision: str = Field("Moderate match", description="Decision verdict: Strong match, Moderate match, etc.")
-    seniority_tier: str = Field("mid_level", description="JD seniority tier: beginner, mid_level, senior")
+    final_score: Optional[float] = Field(
+        default=None, description="Calibrated unified score on 0 to 10 scale"
+    )
+    fit_score: Optional[float] = Field(
+        default=None, description="Calibrated fit percentage on 0 to 100 scale"
+    )
+    overall_decision: str = Field(
+        "Moderate match",
+        description="Decision verdict: Strong match, Moderate match, etc.",
+    )
+    seniority_tier: str = Field(
+        "mid_level", description="JD seniority tier: beginner, mid_level, senior"
+    )
     seniority_label: str = Field("Mid-Level", description="Descriptive seniority title")
-    role_weights: Dict[str, float] = Field(default_factory=dict, description="Active parameter weights triggered by JD")
-    raw_weighted_probability: float = Field(0.0, description="Raw weighted sum before penalty")
-    high_hits_count: int = Field(0, description="Number of dimensions where high flag was hit (0-5)")
-    penalty_applied: float = Field(0.0, description="Penalty deducted for least high hits: max(0, (3-H)*0.02)")
-    total_weighted_probability: float = Field(0.0, description="Final penalized weighted probability")
+    role_weights: Dict[str, float] = Field(
+        default_factory=dict, description="Active parameter weights triggered by JD"
+    )
+    raw_weighted_probability: float = Field(
+        0.0, description="Raw weighted sum before penalty"
+    )
+    high_hits_count: int = Field(
+        0, description="Number of dimensions where high flag was hit (0-5)"
+    )
+    penalty_applied: float = Field(
+        0.0, description="Penalty deducted for least high hits: max(0, (3-H)*0.02)"
+    )
+    total_weighted_probability: float = Field(
+        0.0, description="Final penalized weighted probability"
+    )
     breakdown: Optional[Dict[str, int]] = Field(default_factory=dict)
     parameter_evaluations: Optional[Dict[str, Any]] = Field(default_factory=dict)
     technical_overlap: Optional[Dict[str, Any]] = Field(default_factory=dict)
@@ -86,6 +123,7 @@ class ResumeAnalysisResponse(BaseModel):
 # Enterprise Bulk Screener Schemas
 # ---------------------------------------------------------------------------
 
+
 class EnterpriseCandidateSchema(BaseModel):
     candidate_id: str
     name: str
@@ -116,6 +154,10 @@ class EnterpriseCandidateSchema(BaseModel):
     decision_reason: str = ""
     technical_overlap: Dict[str, Any] = {}
     inspection: Optional[Dict[str, Any]] = None
+    laya_telemetry: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Detailed prompt, questions, and raw model answers for auditability",
+    )
 
     model_config = ConfigDict(extra="allow")
 
@@ -138,6 +180,7 @@ class EnterpriseBulkScreenResponse(BaseModel):
 # ---------------------------------------------------------------------------
 # Session Showcase Candidate Screening Schemas
 # ---------------------------------------------------------------------------
+
 
 class CandidateScreeningItem(BaseModel):
     id: str
@@ -184,10 +227,15 @@ class CandidateScreeningResponse(BaseModel):
 
 
 class QuickApplySchema(BaseModel):
-    verdict: str = Field(..., description="Recommendation verdict: Strong Apply, Good Match, Reach Role, Low Fit")
+    verdict: str = Field(
+        ...,
+        description="Recommendation verdict: Strong Apply, Good Match, Reach Role, Low Fit",
+    )
     fit_score: int = Field(..., description="Calculated fit score percentage (0-100)")
     confidence: int = Field(85, description="Confidence percentage in verdict (0-100)")
-    highlights: List[str] = Field(default_factory=list, description="Key alignment factors")
+    highlights: List[str] = Field(
+        default_factory=list, description="Key alignment factors"
+    )
 
     model_config = ConfigDict(extra="allow")
 

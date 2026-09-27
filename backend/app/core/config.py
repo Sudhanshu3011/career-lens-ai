@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     # SerpApi (Optional: for real-time live Google Jobs search fallback)
     SERPAPI_API_KEY: str = ""
 
+    # Hugging Face Hub (for Laya System 1 decision models)
+    HF_TOKEN: str = ""
+    HUGGING_FACE_HUB_TOKEN: str = ""
+    HF_HUB_OFFLINE: int = 0
+
     # Database
     DATABASE_URL: str = "sqlite:///data/sessions.db"
 

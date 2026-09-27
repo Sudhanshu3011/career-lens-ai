@@ -12,9 +12,9 @@ import time
 from typing import Any, Dict, List
 from fastapi import HTTPException, UploadFile, status
 
-from app.tools.deterministic_parser import parse_resume_from_pdf
-from app.tools.candidate_scorer import score_resume_against_jd
-from app.core.decision_engine import decision_engine
+from app.parsers.resume_parser import parse_resume_from_pdf
+from app.domain.scoring.candidate_scorer import score_resume_against_jd
+from app.domain.seniority.classifier import seniority_classifier
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -26,6 +26,9 @@ VALID_PDF_MIME_TYPES = {
     "applications/vnd.pdf",
     "text/pdf",
 }
+
+# Concurrency throttling to keep PyTorch CPU operations within Docker container limits
+MAX_CONCURRENT_CANDIDATE_EVALUATIONS = 2
 
 
 def validate_screening_batch(resumes: List[UploadFile]) -> None:
@@ -41,7 +44,9 @@ def validate_screening_batch(resumes: List[UploadFile]) -> None:
         )
 
     if len(resumes) > 15:
-        logger.warning(f"Batch validation failed: {len(resumes)} resumes uploaded (max 15 allowed)")
+        logger.warning(
+            f"Batch validation failed: {len(resumes)} resumes uploaded (max 15 allowed)"
+        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Maximum 15 resumes allowed per batch. You uploaded {len(resumes)}.",
@@ -50,15 +55,22 @@ def validate_screening_batch(resumes: List[UploadFile]) -> None:
     for file in resumes:
         filename = (file.filename or "").strip()
         if not filename.lower().endswith(".pdf"):
-            logger.warning(f"Batch validation failed: file '{filename}' lacks .pdf extension")
+            logger.warning(
+                f"Batch validation failed: file '{filename}' lacks .pdf extension"
+            )
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"File '{filename or 'unnamed'}' is not a PDF. All resumes must have a .pdf extension.",
             )
 
         content_type = (file.content_type or "").split(";")[0].strip().lower()
-        if content_type not in VALID_PDF_MIME_TYPES and content_type != "application/octet-stream":
-            logger.warning(f"Batch validation failed: file '{filename}' has invalid MIME type '{file.content_type}'")
+        if (
+            content_type not in VALID_PDF_MIME_TYPES
+            and content_type != "application/octet-stream"
+        ):
+            logger.warning(
+                f"Batch validation failed: file '{filename}' has invalid MIME type '{file.content_type}'"
+            )
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=(
@@ -66,7 +78,9 @@ def validate_screening_batch(resumes: List[UploadFile]) -> None:
                     "All uploaded files must have a valid PDF MIME type ('application/pdf')."
                 ),
             )
-    logger.info(f"Validated screening batch containing {len(resumes)} valid PDF file(s)")
+    logger.info(
+        f"Validated screening batch containing {len(resumes)} valid PDF file(s)"
+    )
 
 
 def _map_decision(overall_decision: str) -> str:
@@ -97,20 +111,30 @@ def _build_candidate_record(
     tech_overlap = scoring_res.get("technical_overlap", {})
     decision = _map_decision(scoring_res.get("overall_decision", "BORDERLINE"))
 
-    target_tier = scoring_res.get("target_seniority_tier", scoring_res.get("seniority_tier", "mid_level"))
-    target_label = scoring_res.get("target_seniority_label", scoring_res.get("seniority_label", "Mid-Level"))
+    target_tier = scoring_res.get(
+        "target_seniority_tier", scoring_res.get("seniority_tier", "mid_level")
+    )
+    target_label = scoring_res.get(
+        "target_seniority_label", scoring_res.get("seniority_label", "Mid-Level")
+    )
     cand_tier = scoring_res.get("candidate_seniority_tier", "mid_level")
     cand_label = scoring_res.get("candidate_seniority_label", "Mid-Level")
 
     if cand_tier == target_tier:
         seniority_alignment = "ALIGNED"
-        alignment_note = f"Candidate seniority ({cand_label}) matches target requisition."
-    elif (cand_tier == "beginner" and target_tier in ("mid_level", "senior")) or (cand_tier == "mid_level" and target_tier == "senior"):
+        alignment_note = (
+            f"Candidate seniority ({cand_label}) matches target requisition."
+        )
+    elif (cand_tier == "beginner" and target_tier in ("mid_level", "senior")) or (
+        cand_tier == "mid_level" and target_tier == "senior"
+    ):
         seniority_alignment = "GAP"
         alignment_note = f"Seniority gap: Candidate is {cand_label} applying for a {target_label} position."
     else:
         seniority_alignment = "EXCEEDS"
-        alignment_note = f"Candidate seniority ({cand_label}) exceeds {target_label} requisition."
+        alignment_note = (
+            f"Candidate seniority ({cand_label}) exceeds {target_label} requisition."
+        )
 
     role_weights = scoring_res.get("role_weights", {})
     high_hits_count = scoring_res.get("high_hits_count", 0)
@@ -120,18 +144,31 @@ def _build_candidate_record(
 
     matched = tech_overlap.get("matched_skills", [])
     missing = tech_overlap.get("missing_jd_skills", [])
-    matched_str = f"Strong alignment in {', '.join(matched[:3])}." if matched else "Limited direct tech matches."
-    gap_str = f" Missing requirements: {', '.join(missing[:3])}." if missing else " No critical skill deficits identified."
-    penalty_str = f" (Penalty applied: -{penalty_applied*100:.0f}%)" if penalty_applied > 0 else " (No penalty applied)"
+    matched_str = (
+        f"Strong alignment in {', '.join(matched[:3])}."
+        if matched
+        else "Limited direct tech matches."
+    )
+    gap_str = (
+        f" Missing requirements: {', '.join(missing[:3])}."
+        if missing
+        else " No critical skill deficits identified."
+    )
+    penalty_str = (
+        f" (Penalty applied: -{penalty_applied*100:.0f}%)"
+        if penalty_applied > 0
+        else " (No penalty applied)"
+    )
     decision_reason = (
         f"Candidate ({cand_label}) achieved {fit_score_pct}% match for {target_label} requisition. "
         f"Hit dominant High rating in {high_hits_count}/5 dimensions{penalty_str}. "
         f"{alignment_note} {matched_str}{gap_str}"
     )
 
-    tools = (
-        parsed_data.get("skills_by_domain", {}).get("DevOps & Cloud", [])
-        + parsed_data.get("skills_by_domain", {}).get("Big Data & Distributed Computing", [])
+    tools = parsed_data.get("skills_by_domain", {}).get(
+        "DevOps & Cloud", []
+    ) + parsed_data.get("skills_by_domain", {}).get(
+        "Big Data & Distributed Computing", []
     )
 
     return {
@@ -169,7 +206,9 @@ def _build_candidate_record(
             "matched_skills": tech_overlap.get("matched_skills", []),
             "missing_jd_skills": tech_overlap.get("missing_jd_skills", []),
             "candidate_bonus_skills": tech_overlap.get("candidate_bonus_skills", []),
-            "skill_overlap_percentage": tech_overlap.get("skill_overlap_percentage", 0.0),
+            "skill_overlap_percentage": tech_overlap.get(
+                "skill_overlap_percentage", 0.0
+            ),
         },
         "inspection": {
             "summary": parsed_data.get("summary", ""),
@@ -177,11 +216,15 @@ def _build_candidate_record(
             "education": parsed_data.get("education", ""),
             "skills": parsed_data.get("skills", ""),
             "contact_info": parsed_data.get("contact_info", {}),
+            "laya_telemetry": scoring_res.get("telemetry", {}),
         },
+        "laya_telemetry": scoring_res.get("telemetry", {}),
     }
 
 
-def _build_fallback_record(idx: int, filename: str, error_message: str) -> Dict[str, Any]:
+def _build_fallback_record(
+    idx: int, filename: str, error_message: str
+) -> Dict[str, Any]:
     """Generates a safe fallback record for a corrupted or unparsable resume."""
     clean_filename = filename.rsplit(".", 1)[0].replace("_", " ").replace("-", " ")
     return {
@@ -238,10 +281,14 @@ async def _evaluate_single_candidate(
     try:
         pdf_bytes = await file.read()
         if not pdf_bytes or len(pdf_bytes) < 100:
-            logger.warning(f"Skipping empty or corrupt PDF resume: {filename} ({len(pdf_bytes) if pdf_bytes else 0} bytes)")
+            logger.warning(
+                f"Skipping empty or corrupt PDF resume: {filename} ({len(pdf_bytes) if pdf_bytes else 0} bytes)"
+            )
             return None
 
-        logger.info(f"Processing candidate file [{idx+1}]: {filename} ({len(pdf_bytes)} bytes)")
+        logger.info(
+            f"Processing candidate file [{idx+1}]: {filename} ({len(pdf_bytes)} bytes)"
+        )
         parsed_data = await asyncio.to_thread(parse_resume_from_pdf, pdf_bytes)
         scoring_res = await asyncio.to_thread(
             score_resume_against_jd,
@@ -267,7 +314,10 @@ async def _evaluate_single_candidate(
 def _rank_and_flag_candidates(candidates: List[Dict[str, Any]]) -> None:
     """Sorts candidates descending by unified total weighted probability and assigns rank badges."""
     candidates.sort(
-        key=lambda c: (c.get("total_weighted_probability", 0.0), c.get("fit_score", 0.0)),
+        key=lambda c: (
+            c.get("total_weighted_probability", 0.0),
+            c.get("fit_score", 0.0),
+        ),
         reverse=True,
     )
     for rank_idx, cand in enumerate(candidates):
@@ -294,10 +344,17 @@ async def screen_resumes_batch(
     )
     combined_jd = f"Target Role: {job_role}\n\nJob Requirements:\n{job_description}"
 
-    # Process all candidates concurrently with asyncio.gather
+    # Process candidates concurrently throttled by semaphore to prevent CPU saturation
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_CANDIDATE_EVALUATIONS)
+
+    async def _evaluate_throttled(idx: int, file: UploadFile) -> Dict[str, Any] | None:
+        async with semaphore:
+            return await _evaluate_single_candidate(
+                file=file, combined_jd=combined_jd, idx=idx, job_role=job_role
+            )
+
     evaluation_tasks = [
-        _evaluate_single_candidate(file=file, combined_jd=combined_jd, idx=idx, job_role=job_role)
-        for idx, file in enumerate(resumes)
+        _evaluate_throttled(idx=idx, file=file) for idx, file in enumerate(resumes)
     ]
     raw_results = await asyncio.gather(*evaluation_tasks)
     candidates = [res for res in raw_results if res is not None]
@@ -314,14 +371,24 @@ async def screen_resumes_batch(
 
     # Classify JD seniority tier and active weights for the batch
     try:
-        jd_res = decision_engine.classify_jd_seniority(combined_jd, job_role=job_role)
+        jd_res = seniority_classifier.classify_jd_seniority(
+            combined_jd, job_role=job_role
+        )
         tier = jd_res["seniority_tier"]
         label = jd_res["seniority_label"]
         weights = jd_res["weights"]
     except Exception:
-        tier, label, weights = "mid_level", "Mid-Level", {
-            "technical": 0.25, "experience": 0.30, "domain": 0.20, "education": 0.05, "evidence": 0.20
-        }
+        tier, label, weights = (
+            "mid_level",
+            "Mid-Level",
+            {
+                "technical": 0.25,
+                "experience": 0.30,
+                "domain": 0.20,
+                "education": 0.05,
+                "evidence": 0.20,
+            },
+        )
 
     top_name = candidates[0]["name"] if candidates else "N/A"
     top_score = candidates[0]["fit_score"] if candidates else 0.0

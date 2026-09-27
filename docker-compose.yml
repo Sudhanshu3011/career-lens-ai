@@ -12,19 +12,27 @@ services:
     environment:
       - DATABASE_URL=sqlite:////app/data/sessions.db
       - PYTHONUNBUFFERED=1
-      - HF_HUB_OFFLINE=1
+      - HF_HUB_OFFLINE=0
+      - HF_TOKEN=${HF_TOKEN:-}
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN:-}
+      - HF_HOME=/app/data/huggingface
     volumes:
       - backend_data:/app/data
       - ./backend/app:/app/app:ro
-      - /home/sudhanshu/.cache/huggingface:/home/appuser/.cache/huggingface:ro
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
-      interval: 15s
-      timeout: 5s
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')",
+        ]
+      interval: 20s
+      timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
 
   frontend:
     build:

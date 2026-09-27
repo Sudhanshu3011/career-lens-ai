@@ -81,16 +81,22 @@ def test_header_classification():
     assert conf >= 60.0
 
     # Negative cases: bullet points and action sentences must NOT be classified as headers
-    sec, conf = classify_section_header("- Architected multi-agent streaming pipelines using FastAPI")
+    sec, conf = classify_section_header(
+        "- Architected multi-agent streaming pipelines using FastAPI"
+    )
     assert sec is None
     assert conf == 0.0
 
-    sec, conf = classify_section_header("Experienced software engineer with 5 years of background.")
+    sec, conf = classify_section_header(
+        "Experienced software engineer with 5 years of background."
+    )
     assert sec is None
     assert conf == 0.0
 
 
 def test_full_text_resume_parsing():
+    # Warm up to exclude one-time regex index initialization
+    _ = parse_resume_from_text(SAMPLE_RESUME_TEXT)
     start_time = time.perf_counter()
     parsed = parse_resume_from_text(SAMPLE_RESUME_TEXT)
     elapsed_ms = (time.perf_counter() - start_time) * 1000
@@ -164,5 +170,3 @@ def test_multi_column_resume_parsing():
         assert "Tender AI" in parsed["projects"]
         assert "Master of Science" in parsed["education"]
         assert parsed["contact_info"]["portfolio"] == "www.drcsystems.com"
-
-
