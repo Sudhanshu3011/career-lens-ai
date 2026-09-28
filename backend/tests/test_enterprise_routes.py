@@ -92,3 +92,63 @@ def test_bulk_screen_rejects_invalid_mime_type():
     )
     assert res.status_code == 400
     assert "invalid MIME type" in res.json()["detail"]
+
+
+def test_preview_requirements_endpoint():
+    res = client.post(
+        "/api/v1/enterprise/preview-requirements",
+        json={
+            "job_role": "Senior AI Engineer",
+            "job_description": "Must have 5+ years with Python and PyTorch. Mandatory Docker. Nice to have OpenCV.",
+            "pipeline": "typesafe",
+        },
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["success"] is True
+    assert data["job_role"] == "Senior AI Engineer"
+    assert "suggested_requirements" in data
+    assert len(data["suggested_requirements"]) > 0
+
+    # Verify preview questions are populated
+    first_req = data["suggested_requirements"][0]
+    assert "name" in first_req
+    assert "is_hard_requirement" in first_req
+    assert "suggested_gate_question" in first_req
+    assert "suggested_direct_question" in first_req
+    assert "preview_questions_summary" in data
+
+
+def test_bulk_screen_with_approved_requirements():
+    import json
+    pdf = b"%PDF-1.4 mock pdf data " + b"0" * 300
+    files = [
+        ("resumes", ("candidate.pdf", pdf, "application/pdf")),
+    ]
+    approved_reqs = json.dumps([
+        {"name": "Python", "is_hard_requirement": True, "category": "Languages"},
+        {"name": "PyTorch", "is_hard_requirement": True, "category": "AI/ML"},
+        {"name": "Docker", "is_hard_requirement": False, "category": "DevOps"},
+    ])
+    res = client.post(
+        "/api/v1/enterprise/bulk-screen",
+        files=files,
+        data={
+            "job_role": "AI Engineer",
+            "job_description": "We need an AI Engineer.",
+            "approved_requirements": approved_reqs,
+            "pipeline": "typesafe",
+        },
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["success"] is True
+    assert len(data["candidates"]) == 1
+
+
+def test_settings_keys_clean():
+    from app.core.config import settings
+    assert hasattr(settings, "TYPESAFE_API_KEY")
+    assert hasattr(settings, "HF_TOKEN")
+    assert not hasattr(settings, "SERPAPI_API_KEY")
+

@@ -10,7 +10,6 @@ from app.tools.pdf_extractor import extract_text
 from app.tools.deterministic_parser import parse_resume_from_text
 from app.tools.tech_keyword_extractor import extract_tech_keywords
 from app.tools.candidate_scorer import score_resume_against_jd
-from app.core.decision_engine import decision_engine
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -327,11 +326,16 @@ class SessionService:
             cand_summary = cand.summary if hasattr(cand, "summary") else cand.get("summary", "")
             cand_edu = cand.education if hasattr(cand, "education") else cand.get("education", "")
 
-            decision = decision_engine.evaluate_resume_match(
-                candidate_skills=candidate_skills,
-                experience_text=exp_text,
+            decision = score_resume_against_jd(
+                resume_data={
+                    "tech_skills": candidate_skills.get("technical_skills", []),
+                    "tools_and_platforms": candidate_skills.get("tools_and_platforms", []),
+                    "domains": candidate_skills.get("domains", []),
+                    "experience": exp_text,
+                    "summary": cand_summary,
+                    "education": cand_edu,
+                },
                 job_description=job_description,
-                education_text=cand_edu,
             )
             cand_latency_ms = round((time.perf_counter() - cand_start) * 1000, 1)
             logger.info(

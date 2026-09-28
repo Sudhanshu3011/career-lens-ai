@@ -124,3 +124,70 @@ tech_keyword_extractor = TechKeywordExtractor()
 def extract_tech_keywords(text: str) -> Dict[str, Any]:
     """Convenience function to extract tech skills using the global extractor."""
     return tech_keyword_extractor.extract_skills(text)
+
+
+# ---------------------------------------------------------------------------
+# Domain → Broad Umbrella Skill Mapping
+# ---------------------------------------------------------------------------
+# When a sub-skill is detected (e.g. "PyTorch"), we automatically inject its
+# umbrella term (e.g. "Machine Learning") so that matching is fairer — a
+# candidate with PyTorch isn't penalised for not explicitly writing "ML".
+_DOMAIN_UMBRELLA: Dict[str, List[str]] = {
+    "languages":            ["Programming"],
+    "frontend":             ["Frontend Development"],
+    "backend":              ["Backend Development", "Web Development"],
+    "ai_ml_data_science":  ["Machine Learning", "Artificial Intelligence"],
+    "genai_llms":          ["Generative AI", "Large Language Models"],
+    "databases":           ["Databases", "Data Management"],
+    "cloud_devops":        ["Cloud Computing", "DevOps"],
+    "data_engineering":    ["Data Engineering", "Big Data"],
+    "mobile":              ["Mobile Development"],
+    "cybersecurity":       ["Cybersecurity", "Information Security"],
+    "qa_testing":          ["Software Testing", "Quality Assurance"],
+    "embedded_iot":        ["Embedded Systems", "IoT"],
+    "blockchain_web3":     ["Blockchain", "Web3"],
+    "generative_ai":       ["Generative AI", "Large Language Models"],
+    "nlp":                 ["Natural Language Processing", "NLP"],
+    "cloud_ai_services":   ["Cloud AI", "AI Services"],
+    "data_visualization":  ["Data Visualization"],
+    "speech_voice_ai":     ["Speech AI", "Voice AI", "Conversational AI"],
+    "statistical_modeling":["Statistical Modeling", "Data Science"],
+    "observability":       ["Monitoring", "Observability"],
+    "ci_cd_extended":      ["CI/CD", "DevOps"],
+    "infrastructure_as_code": ["Infrastructure as Code", "DevOps"],
+    "messaging_extended":  ["Messaging", "Event Streaming"],
+    "testing_extended":    ["Software Testing", "Quality Assurance"],
+    "orchestration_extended": ["Container Orchestration", "DevOps"],
+    "cloud_services_extended": ["Cloud Computing"],
+    "data_engineering_extended": ["Data Engineering", "Analytics"],
+    "blockchain_extended": ["Blockchain"],
+}
+
+
+def expand_with_parent_domains(skills: List[str]) -> List[str]:
+    """
+    Given a list of canonical skill names, return the same list expanded with
+    inferred broader/umbrella terms.
+
+    Example:
+        ["PyTorch", "LangChain", "AWS S3"] →
+        ["PyTorch", "LangChain", "AWS S3",
+         "Machine Learning", "Artificial Intelligence",
+         "Generative AI", "Large Language Models",
+         "Cloud Computing", "DevOps"]
+
+    Deduplicates the result while preserving the original ordering.
+    """
+    extractor = tech_keyword_extractor
+    expanded: List[str] = list(skills)
+    seen: Set[str] = set(s.lower() for s in skills)
+
+    for skill in skills:
+        domain = extractor._canonical_to_domain.get(skill)
+        if domain and domain in _DOMAIN_UMBRELLA:
+            for umbrella in _DOMAIN_UMBRELLA[domain]:
+                if umbrella.lower() not in seen:
+                    expanded.append(umbrella)
+                    seen.add(umbrella.lower())
+
+    return expanded

@@ -12,8 +12,11 @@ class Settings(BaseSettings):
     APP_ENV: str = "production"
     LOG_LEVEL: str = "INFO"
 
-    # SerpApi (Optional: for real-time live Google Jobs search fallback)
-    SERPAPI_API_KEY: str = ""
+    # TypeSafe Jev API Key
+    TYPESAFE_API_KEY: str = ""
+
+    # Hugging Face Token (for ConvAI Laya & model hub access)
+    HF_TOKEN: str = ""
 
     # Database
     DATABASE_URL: str = "sqlite:///data/sessions.db"

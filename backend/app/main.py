@@ -7,6 +7,8 @@ from app.api.session_routes import router as session_router
 from app.api.enterprise_routes import router as enterprise_router
 from app.db.database import init_db
 from app.core.logger import get_logger
+from fastapi.openapi.utils import get_openapi
+
 
 logger = get_logger(__name__)
 
@@ -60,6 +62,47 @@ async def log_http_requests(request: Request, call_next):
     return response
 
 
+@app.get("/", tags=["Root"])
+def root():
+    """Service status and quick links."""
+    return {
+        "service": "CareerLens AI API",
+        "version": "1.0.0",
+        "status": "online",
+        "documentation": "/docs",
+        "health": "/api/v1/health",
+        "frontend": "http://localhost:3000",
+    }
+
+
+
+
 app.include_router(router, prefix="/api/v1")
 app.include_router(session_router, prefix="/api/v1")
 app.include_router(enterprise_router, prefix="/api/v1")
+
+
+def custom_openapi():
+    """Ensure Swagger UI renders file upload inputs for OpenAPI 3.1 UploadFile arrays."""
+    if app.openapi_schema:
+        return app.openapi_schema
+    schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        openapi_version=app.openapi_version,
+        description=app.description,
+        routes=app.routes,
+    )
+    for schema_def in schema.get("components", {}).get("schemas", {}).values():
+        for prop_name, prop in schema_def.get("properties", {}).items():
+            if prop.get("type") == "array" and "items" in prop:
+                if prop_name == "resumes" or prop["items"].get("contentMediaType") == "application/octet-stream":
+                    prop["items"]["format"] = "binary"
+            elif prop.get("contentMediaType") == "application/octet-stream" or prop_name == "resume":
+                prop["format"] = "binary"
+    app.openapi_schema = schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
+

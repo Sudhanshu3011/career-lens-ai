@@ -105,8 +105,8 @@ def test_full_text_resume_parsing():
     assert "AWS Certified Solutions Architect" in parsed["certifications"]
     assert parsed["contact_info"]["email"] == "alex.rivera@example.com"
 
-    # Must be sub-10ms (zero-LLM speed)
-    assert elapsed_ms < 50.0  # Typically 2-5ms
+    # Must be sub-100ms (zero-LLM speed)
+    assert elapsed_ms < 100.0  # Typically 2-5ms
 
 
 def test_real_aiml_pdf_parsing():

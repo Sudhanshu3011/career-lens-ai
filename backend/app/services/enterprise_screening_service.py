@@ -8,13 +8,19 @@ concurrent async processing, and Top 3 candidate ranking.
 from __future__ import annotations
 
 import asyncio
+import gc
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from fastapi import HTTPException, UploadFile, status
+
+# Safe concurrency limit: restricts parallel neural tensor operations to prevent memory spikes & thread thrashing
+MAX_CONCURRENT_CANDIDATE_EVALUATIONS = 3
 
 from app.tools.deterministic_parser import parse_resume_from_pdf
 from app.tools.candidate_scorer import score_resume_against_jd
-from app.core.decision_engine import decision_engine
+from app.services.typesafe_pipeline import evaluate_candidate_typesafe
+from app.extraction.jd_extractor import extract_job_profile
+from app.models.job_profile import JobProfile
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -225,43 +231,46 @@ def _build_fallback_record(idx: int, filename: str, error_message: str) -> Dict[
 
 async def _evaluate_single_candidate(
     file: UploadFile,
-    combined_jd: str,
+    job_profile: JobProfile,
     idx: int,
-    job_role: str = "",
+    pipeline_mode: str = "typesafe",
+    semaphore: Optional[asyncio.Semaphore] = None,
 ) -> Dict[str, Any] | None:
     """
-    Asynchronously reads and evaluates a single resume file.
-    Offloads synchronous CPU-bound parsing and scoring to worker threads.
+    Asynchronously reads and evaluates a single resume file using the modular TypeSafe pipeline.
+    Gates concurrent execution with a Semaphore to prevent CPU thread thrashing and PyTorch memory spikes.
     """
     filename = file.filename or f"resume_{idx+1}.pdf"
-    cand_start = time.perf_counter()
-    try:
-        pdf_bytes = await file.read()
-        if not pdf_bytes or len(pdf_bytes) < 100:
-            logger.warning(f"Skipping empty or corrupt PDF resume: {filename} ({len(pdf_bytes) if pdf_bytes else 0} bytes)")
-            return None
 
-        logger.info(f"Processing candidate file [{idx+1}]: {filename} ({len(pdf_bytes)} bytes)")
-        parsed_data = await asyncio.to_thread(parse_resume_from_pdf, pdf_bytes)
-        scoring_res = await asyncio.to_thread(
-            score_resume_against_jd,
-            resume_data=parsed_data,
-            job_description=combined_jd,
-            job_role=job_role,
-        )
+    async def _execute_evaluation():
+        pdf_bytes = None
+        try:
+            pdf_bytes = await file.read()
+            if not pdf_bytes or len(pdf_bytes) < 100:
+                logger.warning(f"Skipping empty or corrupt PDF resume: {filename} ({len(pdf_bytes) if pdf_bytes else 0} bytes)")
+                return None
 
-        record = _build_candidate_record(idx, filename, parsed_data, scoring_res)
-        cand_elapsed = (time.perf_counter() - cand_start) * 1000
-        logger.info(
-            f"Candidate evaluated [{idx+1}]: '{record['name']}' ({filename}) in {cand_elapsed:.1f}ms "
-            f"-> Fit={record['fit_score']}%, Decision={record['decision']}, "
-            f"CandSeniority={record['candidate_seniority_label']} vs Target={record['target_seniority_label']}"
-        )
-        return record
+            record = await asyncio.to_thread(
+                evaluate_candidate_typesafe,
+                pdf_bytes=pdf_bytes,
+                filename=filename,
+                job_profile=job_profile,
+                idx=idx,
+                pipeline_mode=pipeline_mode,
+            )
+            return record
 
-    except Exception as exc:
-        logger.error(f"Failed to process candidate {filename}: {exc}", exc_info=True)
-        return _build_fallback_record(idx, filename, str(exc))
+        except Exception as exc:
+            logger.error(f"Failed to process candidate {filename}: {exc}", exc_info=True)
+            return _build_fallback_record(idx, filename, str(exc))
+        finally:
+            # Free in-memory PDF byte buffers immediately
+            del pdf_bytes
+
+    if semaphore:
+        async with semaphore:
+            return await _execute_evaluation()
+    return await _execute_evaluation()
 
 
 def _rank_and_flag_candidates(candidates: List[Dict[str, Any]]) -> None:
@@ -280,28 +289,54 @@ async def screen_resumes_batch(
     job_role: str,
     job_description: str,
     resumes: List[UploadFile],
+    pipeline_mode: str = "typesafe",
+    approved_requirements: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """
-    Executes concurrent batch screening of resumes against the target job description.
-    Uses asyncio.gather for parallel async execution across uploaded files.
+    Executes concurrent batch screening of resumes against the target job description:
+    1. Validates upload batch size and file MIME types.
+    2. Constructs structured JobProfile (Stage 1 JD analysis or recruiter-approved criteria).
+    3. Concurrently evaluates candidates using bounded concurrency semaphore (prevents OOM).
+    4. Ranks candidates and flags top shortlisted profiles.
     """
     validate_screening_batch(resumes)
 
     start_time = time.perf_counter()
     logger.info(
-        f"Starting batch screening pipeline: Role='{job_role}', "
-        f"BatchSize={len(resumes)}, JDLength={len(job_description)} chars"
+        f"Starting TypeSafe batch screening pipeline: Role='{job_role}', Pipeline='{pipeline_mode}', "
+        f"BatchSize={len(resumes)}, ApprovedReqs={len(approved_requirements) if approved_requirements else 0}, "
+        f"JDLength={len(job_description)} chars, ConcurrencyLimit={MAX_CONCURRENT_CANDIDATE_EVALUATIONS}"
     )
-    combined_jd = f"Target Role: {job_role}\n\nJob Requirements:\n{job_description}"
 
-    # Process all candidates concurrently with asyncio.gather
+    # 1. Normalize JD into structured JobProfile via TypeSafe extractor
+    job_profile: JobProfile = await asyncio.to_thread(
+        extract_job_profile,
+        job_description=job_description,
+        job_role=job_role,
+        pipeline_mode=pipeline_mode,
+        approved_requirements=approved_requirements,
+    )
+
+    # 2. Process candidates with bounded concurrency semaphore to prevent memory exhaustion
+    semaphore = asyncio.Semaphore(MAX_CONCURRENT_CANDIDATE_EVALUATIONS)
     evaluation_tasks = [
-        _evaluate_single_candidate(file=file, combined_jd=combined_jd, idx=idx, job_role=job_role)
+        _evaluate_single_candidate(
+            file=file,
+            job_profile=job_profile,
+            idx=idx,
+            pipeline_mode=pipeline_mode,
+            semaphore=semaphore,
+        )
         for idx, file in enumerate(resumes)
     ]
     raw_results = await asyncio.gather(*evaluation_tasks)
     candidates = [res for res in raw_results if res is not None]
 
+    # Explicit garbage collection after large batches (10-20 resumes) to reclaim tensor memory
+    if len(resumes) >= 4:
+        gc.collect()
+
+    # 3. Rank and assign badges
     _rank_and_flag_candidates(candidates)
 
     elapsed = time.perf_counter() - start_time
@@ -312,32 +347,30 @@ async def screen_resumes_batch(
     )
     selected_count = sum(1 for c in candidates if c["decision"] == "SELECT")
 
-    # Classify JD seniority tier and active weights for the batch
-    try:
-        jd_res = decision_engine.classify_jd_seniority(combined_jd, job_role=job_role)
-        tier = jd_res["seniority_tier"]
-        label = jd_res["seniority_label"]
-        weights = jd_res["weights"]
-    except Exception:
-        tier, label, weights = "mid_level", "Mid-Level", {
-            "technical": 0.25, "experience": 0.30, "domain": 0.20, "education": 0.05, "evidence": 0.20
-        }
-
     top_name = candidates[0]["name"] if candidates else "N/A"
     top_score = candidates[0]["fit_score"] if candidates else 0.0
     logger.info(
-        f"Completed batch screening for '{job_role}' in {elapsed:.2f}s: "
+        f"Completed TypeSafe batch screening for '{job_role}' in {elapsed:.2f}s: "
         f"Evaluated={len(candidates)}/{len(resumes)}, Selected={selected_count}, "
         f"AvgScore={avg_score}%, TopCandidate='{top_name}' ({top_score}%), "
-        f"TargetSeniority='{label}'"
+        f"TargetSeniority='{job_profile.seniority_label}' (Score={job_profile.seniority_score:.2f})"
     )
+
+    role_weights = {
+        "technical": 0.25,
+        "seniority": 0.20,
+        "experience": 0.20,
+        "domain": 0.15,
+        "requirements": 0.15,
+        "education": 0.05,
+    }
 
     return {
         "success": True,
-        "job_role": job_role,
-        "seniority_tier": tier,
-        "seniority_label": label,
-        "role_weights": weights,
+        "job_role": job_profile.role_title,
+        "seniority_tier": job_profile.seniority_label.lower().replace(" ", "_").replace("/", "_"),
+        "seniority_label": job_profile.seniority_label,
+        "role_weights": role_weights,
         "total_evaluated": len(candidates),
         "top_3_shortlisted": min(3, len(candidates)),
         "top_5_shortlisted": min(5, len(candidates)),

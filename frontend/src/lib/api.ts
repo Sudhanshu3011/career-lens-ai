@@ -43,16 +43,22 @@ export async function checkBackendHealth(): Promise<{
 /**
  * Enterprise Bulk Candidate Resume Screener
  * Evaluates a batch of candidate PDF resumes against a target job requisition using the
- * zero-hallucination calibrated ConvAI Laya scoring pipeline.
+ * calibrated TypeSafe Jev or ConvAI Laya scoring pipeline.
  */
 export async function bulkScreenEnterpriseResumes(
   files: File[],
   jobRole: string,
-  jobDescription: string
+  jobDescription: string,
+  pipeline: "typesafe" | "laya_local" = "typesafe",
+  approvedRequirements?: any[]
 ): Promise<EnterpriseScreeningResponse> {
   const formData = new FormData();
   formData.append("job_role", jobRole);
   formData.append("job_description", jobDescription);
+  formData.append("pipeline", pipeline);
+  if (approvedRequirements && approvedRequirements.length > 0) {
+    formData.append("approved_requirements", JSON.stringify(approvedRequirements));
+  }
   for (const file of files) {
     formData.append("resumes", file);
   }
@@ -78,3 +84,37 @@ export async function bulkScreenEnterpriseResumes(
 
   return await res.json();
 }
+
+/**
+ * Transparent Preview of Extracted JD Criteria & Evaluation Questions
+ */
+export async function previewJobRequirements(
+  jobRole: string,
+  jobDescription: string,
+  pipeline: "typesafe" | "laya_local" = "typesafe"
+): Promise<any> {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/enterprise/preview-requirements`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      job_role: jobRole,
+      job_description: jobDescription,
+      pipeline,
+    }),
+  });
+
+  if (!res.ok) {
+    let errorMsg = `Server returned ${res.status}`;
+    try {
+      const errJson = await res.json();
+      if (errJson.detail) {
+        errorMsg = typeof errJson.detail === "string" ? errJson.detail : JSON.stringify(errJson.detail);
+      }
+    } catch {}
+    throw new Error(errorMsg);
+  }
+
+  return await res.json();
+}
+

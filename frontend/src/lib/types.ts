@@ -53,14 +53,20 @@ export interface EnterpriseCandidate {
   tools: string[];
   domains: string[];
   decision_reason: string;
+  /** Populated by the 20% hard gate in candidate_scorer.py */
+  rejection_reason?: "does_not_fit_role" | "technical_gate" | string;
+  rejection_message?: string;
   technical_overlap?: {
     matched_skills?: string[];
     missing_jd_skills?: string[];
     missing_skills?: string[];
     candidate_bonus_skills?: string[];
     skill_overlap_percentage?: number;
+    jd_skills_required?: string[];
   };
   inspection?: CandidateInspection;
+  /** Injected client-side – blob URL of the uploaded PDF for inline preview */
+  pdfUrl?: string;
 }
 
 export interface EnterpriseScreeningResponse {

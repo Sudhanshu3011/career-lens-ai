@@ -49,7 +49,7 @@ class ScoreEvaluationSchema(BaseModel):
     high_hits_count: int = Field(0, description="Number of dimensions where high flag was hit (0-5)")
     penalty_applied: float = Field(0.0, description="Penalty deducted for least high hits: max(0, (3-H)*0.02)")
     total_weighted_probability: float = Field(0.0, description="Final penalized weighted probability")
-    breakdown: Optional[Dict[str, int]] = Field(default_factory=dict)
+    breakdown: Optional[Dict[str, float]] = Field(default_factory=dict)
     parameter_evaluations: Optional[Dict[str, Any]] = Field(default_factory=dict)
     technical_overlap: Optional[Dict[str, Any]] = Field(default_factory=dict)
     source: str = Field("laya_decision_engine", description="Scoring source model")
@@ -60,7 +60,7 @@ class ScoreEvaluationSchema(BaseModel):
 class ResumeAnalysisData(BaseModel):
     parsed_resume: Dict[str, Any]
     skills_analysis: Dict[str, Any]
-    decision_breakdown: Dict[str, int]
+    decision_breakdown: Dict[str, float]
     scores: Dict[str, Any]
     feedback: List[str]
     strengths: Optional[List[str]] = Field(default_factory=list)
@@ -108,7 +108,7 @@ class EnterpriseCandidateSchema(BaseModel):
     raw_weighted_probability: float = 0.0
     penalty_applied: float = 0.0
     total_weighted_probability: float = 0.0
-    breakdown: Dict[str, int]
+    breakdown: Dict[str, float]
     parameter_evaluations: Optional[Dict[str, Any]] = None
     skills: List[str] = []
     tools: List[str] = []
@@ -212,3 +212,48 @@ class QuickApplyResponse(BaseModel):
 ShouldIApplySchema = QuickApplySchema
 ShouldIApplyRequest = QuickApplyRequest
 ShouldIApplyResponse = QuickApplyResponse
+
+
+# ---------------------------------------------------------------------------
+# Transparent Job Requirements Preview Schemas
+# ---------------------------------------------------------------------------
+
+class DetectedRequirementItem(BaseModel):
+    name: str = Field(..., description="Requirement or skill name")
+    category: str = Field("skill", description="Category: skill, tool, framework, domain")
+    is_hard_requirement: bool = Field(False, description="Whether this is a mandatory gate (dealbreaker)")
+    target_years: Optional[float] = Field(None, description="Explicit required experience in years if detected")
+    description: Optional[str] = Field("", description="Requirement context or explanation")
+    suggested_gate_question: Optional[str] = Field(None, description="Preview of Noul gate question")
+    suggested_direct_question: Optional[str] = Field(None, description="Preview of Noul direct evidence question")
+    suggested_strength_question: Optional[str] = Field(None, description="Preview of Score 0-5 strength question")
+
+    model_config = ConfigDict(extra="allow")
+
+
+class ApprovedRequirementInput(BaseModel):
+    name: str = Field(..., description="Requirement name")
+    is_hard_requirement: bool = Field(False, description="True if mandatory gate, False if standard evaluated skill")
+    category: Optional[str] = Field("skill", description="Category")
+
+
+class JDPreviewRequest(BaseModel):
+    job_role: str = Field(..., min_length=2, description="Target Job Role title, e.g. Senior Backend Engineer")
+    job_description: str = Field(..., min_length=20, description="Full job description requirements text")
+    pipeline: str = Field("typesafe", description="Target pipeline: 'typesafe' or 'laya_local'")
+
+
+class JDPreviewResponse(BaseModel):
+    success: bool = True
+    job_role: str
+    seniority_score: float
+    seniority_label: str
+    role_family: str
+    domain: str
+    total_detected_skills: int
+    detected_skills_by_category: Dict[str, List[str]]
+    suggested_requirements: List[DetectedRequirementItem]
+    preview_questions_summary: Dict[str, Any]
+
+    model_config = ConfigDict(extra="allow")
+

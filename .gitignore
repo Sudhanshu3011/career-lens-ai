@@ -61,10 +61,10 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
-**/data/*.db
-**/data/*.sqlite3
-data/
-backend/data/*.db
+# **/data/*.db
+# **/data/*.sqlite3
+# data/
+# backend/data/*.db
 
 # Node.js / Next.js dependencies & builds
 node_modules/
@@ -78,7 +78,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 .agent/
-AGENTS.MD
+.agents/
 docs/
 resume/
 PROJECT_ARCHITECTURE_DECISIONS.md
