@@ -1,26 +1,36 @@
 """
-CareerLens AI - Domain Models Package
+CareerLens AI - Universal Domain Models Package
 """
 
-from app.models.domain.candidate import CandidateProfile, ResumeBlock
-from app.models.domain.decision import (
-    CompositeScore,
-    DecisionState,
-    HardRequirementGate,
-    SeniorityAssessment,
+from app.models.domain.candidate_decision import (
+    CandidateVerdict,
+    GateResult,
+    ScoreBreakdown,
 )
-from app.models.domain.evidence import Evidence, EvidenceAssessment
-from app.models.domain.job import JobProfile, RequirementItem
+from app.models.domain.dynamic_blueprint import (
+    AscendingAssessmentBlueprint,
+    BackgroundClassificationBlueprint,
+    EvaluationQuestionsBlueprint,
+    MandatoryDealbreakerBlueprint,
+)
+from app.models.domain.resume_sections import (
+    EducationItem,
+    ResumeParsedSections,
+    WorkExperienceItem,
+)
 
 __all__ = [
-    "CandidateProfile",
-    "ResumeBlock",
-    "CompositeScore",
-    "DecisionState",
-    "HardRequirementGate",
-    "SeniorityAssessment",
-    "Evidence",
-    "EvidenceAssessment",
-    "JobProfile",
-    "RequirementItem",
+    # Universal Resume Sections
+    "EducationItem",
+    "ResumeParsedSections",
+    "WorkExperienceItem",
+    # Dynamic Blueprints
+    "AscendingAssessmentBlueprint",
+    "BackgroundClassificationBlueprint",
+    "EvaluationQuestionsBlueprint",
+    "MandatoryDealbreakerBlueprint",
+    # Candidate Verdict & Decision
+    "CandidateVerdict",
+    "GateResult",
+    "ScoreBreakdown",
 ]

@@ -2,6 +2,8 @@
 CareerLens AI - Repositories Package
 """
 
-from app.repositories.session_repository import SessionRepository
+from app.repositories.job_repository import JobRepository
+from app.repositories.resume_repository import ResumeRepository
+from app.repositories.evaluation_repository import EvaluationRepository
 
-__all__ = ["SessionRepository"]
+__all__ = ["JobRepository", "ResumeRepository", "EvaluationRepository"]

@@ -5,46 +5,33 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class", // disabled / not using dark mode
   theme: {
     extend: {
       colors: {
-        background: "#F8FAFC",
+        background: "#0F172A",
+        canvas: "#F8FAFC",
         surface: "#FFFFFF",
         border: "#E2E8F0",
-        miroNavy: "#050038",
-        miroBlue: {
-          DEFAULT: "#4262ff",
-          hover: "#3151eb",
-          light: "#eef2ff",
-        },
-        miroYellow: {
-          DEFAULT: "#ffd02f",
-          hover: "#f5c518",
-          light: "#fff9e6",
-        },
-        miroGray: {
-          50: "#fafbfc",
-          100: "#f4f5f7",
-          200: "#e6e8ec",
-          300: "#d1d5db",
-          400: "#9ca3af",
-          500: "#5e6573",
-          600: "#4b5563",
-          700: "#374151",
-          800: "#1f2937",
-          900: "#050038",
-        },
         primary: {
           50: "#EEF2FF",
           100: "#E0E7FF",
-          500: "#4262ff",
-          600: "#3151eb",
-          700: "#243ec4",
+          200: "#C7D2FE",
+          300: "#A5B4FC",
+          400: "#818CF8",
+          500: "#6366F1",
+          600: "#4F46E5",
+          700: "#4338CA",
+          800: "#3730A3",
+          900: "#312E81",
+          950: "#1E1B4B",
         },
+      },
+      boxShadow: {
+        'card': '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05)',
+        'card-hover': '0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06)',
+        'inner-glow': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.6)',
       },
     },
   },
   plugins: [],
 };
-

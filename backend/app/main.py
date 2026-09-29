@@ -73,8 +73,6 @@ def root():
 
 
 app.include_router(api_router, prefix="/api/v1")
-# Aliased prefix without /v1 for client compatibility
-app.include_router(api_router, prefix="/api")
 
 
 def custom_openapi():

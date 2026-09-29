@@ -2,6 +2,12 @@
 Database ORM models package.
 """
 
-from app.models.db.session import AnalysisSession, generate_uuid, utc_now
+from app.models.db.job_requisition import JobRequisition
+from app.models.db.parsed_resume import ParsedResume
+from app.models.db.candidate_evaluation import CandidateEvaluation
 
-__all__ = ["AnalysisSession", "generate_uuid", "utc_now"]
+__all__ = [
+    "JobRequisition",
+    "ParsedResume",
+    "CandidateEvaluation",
+]

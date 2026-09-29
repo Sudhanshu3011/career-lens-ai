@@ -145,6 +145,13 @@ class JevClient:
         """Alias for system_one_async."""
         return await self.system_one_async(state=state, questions=questions)
 
+    async def evaluate_fanout(
+        self, state: str | Dict[str, Any], questions: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Universal async fan-out entrypoint for speculative evaluation."""
+        return await self.system_one_async(state=state, questions=questions)
+
+
     def _evaluate_fallback(
         self, state_text: str, questions: Dict[str, Any]
     ) -> Dict[str, Any]:

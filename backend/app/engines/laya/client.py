@@ -131,6 +131,10 @@ class LayaClient:
         """Asynchronously executes Laya prediction in a worker thread."""
         return await asyncio.to_thread(self.predict, state, questions)
 
+    async def evaluate_fanout(self, state: Dict[str, Any] | str, questions: Dict[str, Any]) -> Dict[str, Any]:
+        """Universal async fan-out entrypoint for speculative evaluation."""
+        return await asyncio.to_thread(self.predict, state, questions)
+
     def _evaluate_fallback(self, state_payload: Dict[str, Any], questions: Dict[str, Any]) -> Dict[str, Any]:
         """Calibrated fallback adhering strictly to Laya outputs."""
         answers: Dict[str, Any] = {}

@@ -14,6 +14,16 @@ class Settings(BaseSettings):
     # TypeSafe Jev API Key
     TYPESAFE_API_KEY: str = ""
 
+    # Groq & LLM Config
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "openai/gpt-oss-120b"
+
+    # LangSmith Observability Config
+    LANGCHAIN_TRACING_V2: str = "false"
+    LANGCHAIN_API_KEY: str = ""
+    LANGCHAIN_PROJECT: str = "careerlens-resume-screener"
+    LANGCHAIN_ENDPOINT: str = "https://api.smith.langchain.com"
+
     # Hugging Face Token (for ConvAI Laya & model hub access)
     HF_TOKEN: str = ""
 
@@ -48,3 +58,19 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# Synchronize LangSmith & Groq environment variables for LangChain SDK auto-discovery
+import os
+
+if settings.GROQ_API_KEY and not os.environ.get("GROQ_API_KEY"):
+    os.environ["GROQ_API_KEY"] = settings.GROQ_API_KEY
+
+if settings.LANGCHAIN_TRACING_V2.lower() in ("true", "1") or os.environ.get("LANGCHAIN_TRACING_V2", "").lower() in ("true", "1"):
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    if settings.LANGCHAIN_API_KEY:
+        os.environ["LANGCHAIN_API_KEY"] = settings.LANGCHAIN_API_KEY
+    if settings.LANGCHAIN_PROJECT:
+        os.environ["LANGCHAIN_PROJECT"] = settings.LANGCHAIN_PROJECT
+    if settings.LANGCHAIN_ENDPOINT:
+        os.environ["LANGCHAIN_ENDPOINT"] = settings.LANGCHAIN_ENDPOINT
+

@@ -9,4 +9,6 @@ from typing import Generator
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 
-__all__ = ["get_db", "Session"]
+get_database_session = get_db
+
+__all__ = ["get_db", "get_database_session", "Session"]

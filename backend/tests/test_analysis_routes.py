@@ -11,7 +11,7 @@ def test_health_endpoint():
     data = res.json()
     assert data["status"] == "healthy"
     assert data["service"] == "careerlens-enterprise"
-    assert data["pipeline"] == "deterministic-calibrated-laya"
+    assert data["pipeline"] == "universal-speculative-fanout"
 
 
 def test_root_endpoint():

@@ -2,23 +2,11 @@
 CareerLens AI - Layout and PDF Parsing Package
 """
 
-from app.engines.parser.pdf_parser import parse_pdf_to_blocks, extract_text
-from app.engines.parser.layout_analyzer import (
-    detect_column_split,
-    calculate_line_font_metrics,
-)
-from app.engines.parser.block_builder import (
-    classify_section_header,
-    assemble_blocks_from_lines,
-    SECTION_TAXONOMY,
-)
+from app.engines.parser.groq_parser import UniversalResumeParser, groq_parser
+from app.engines.parser.pdf_extractor import extract_text_and_links_from_pdf
 
 __all__ = [
-    "parse_pdf_to_blocks",
-    "extract_text",
-    "detect_column_split",
-    "calculate_line_font_metrics",
-    "classify_section_header",
-    "assemble_blocks_from_lines",
-    "SECTION_TAXONOMY",
+    "UniversalResumeParser",
+    "groq_parser",
+    "extract_text_and_links_from_pdf",
 ]

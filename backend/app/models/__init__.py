@@ -1,28 +1,34 @@
 """
-CareerLens AI - TypeSafe Domain & Database Models
+CareerLens AI - Universal Models Package
 """
 
-from app.models.domain.job import JobProfile, RequirementItem
-from app.models.domain.candidate import CandidateProfile, ResumeBlock
-from app.models.domain.evidence import Evidence, EvidenceAssessment
-from app.models.domain.decision import (
-    DecisionState,
-    CompositeScore,
-    HardRequirementGate,
-    SeniorityAssessment,
+from app.models.domain.candidate_decision import (
+    CandidateVerdict,
+    GateResult,
+    ScoreBreakdown,
 )
-from app.models.db.session import AnalysisSession
+from app.models.domain.dynamic_blueprint import (
+    AscendingAssessmentBlueprint,
+    BackgroundClassificationBlueprint,
+    EvaluationQuestionsBlueprint,
+    MandatoryDealbreakerBlueprint,
+)
+from app.models.domain.resume_sections import (
+    EducationItem,
+    ResumeParsedSections,
+    WorkExperienceItem,
+)
 
 __all__ = [
-    "JobProfile",
-    "RequirementItem",
-    "CandidateProfile",
-    "ResumeBlock",
-    "Evidence",
-    "EvidenceAssessment",
-    "DecisionState",
-    "CompositeScore",
-    "HardRequirementGate",
-    "SeniorityAssessment",
-    "AnalysisSession",
+    # Universal Domain Models
+    "EducationItem",
+    "ResumeParsedSections",
+    "WorkExperienceItem",
+    "AscendingAssessmentBlueprint",
+    "BackgroundClassificationBlueprint",
+    "EvaluationQuestionsBlueprint",
+    "MandatoryDealbreakerBlueprint",
+    "CandidateVerdict",
+    "GateResult",
+    "ScoreBreakdown",
 ]
