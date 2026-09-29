@@ -14,10 +14,48 @@ def test_health_endpoint():
     assert data["pipeline"] == "deterministic-calibrated-laya"
 
 
-def test_candidate_quick_apply_endpoints_removed():
-    # Candidate endpoints should no longer exist in enterprise screener
-    res1 = client.post("/api/v1/quick-apply", json={})
-    assert res1.status_code in (404, 405)
+def test_root_endpoint():
+    res = client.get("/")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["service"] == "CareerLens AI API"
+    assert data["status"] == "online"
 
-    res2 = client.post("/api/v1/should-i-apply", json={})
-    assert res2.status_code in (404, 405)
+
+def test_analysis_router_and_legacy_routes_import():
+    from app.api.v1.endpoints.analysis import router as analysis_router
+    from app.api.v1.router import api_router
+
+    assert analysis_router is not None
+    assert api_router is not None
+
+
+def test_pdf_validator_scenarios():
+    import io
+    from app.core.validators import validate_pdf
+    from fastapi import UploadFile, HTTPException
+
+    valid_file = UploadFile(
+        file=io.BytesIO(b"%PDF-1.4 sample content"),
+        filename="resume.pdf",
+        headers={"content-type": "application/pdf"},
+    )
+    validate_pdf(valid_file, b"%PDF-1.4 sample content")
+
+    invalid_ext = UploadFile(
+        file=io.BytesIO(b"%PDF-1.4 content"),
+        filename="resume.docx",
+        headers={"content-type": "application/pdf"},
+    )
+    with pytest.raises(HTTPException) as exc_info:
+        validate_pdf(invalid_ext, b"%PDF-1.4 content")
+    assert exc_info.value.status_code == 400
+
+    invalid_magic = UploadFile(
+        file=io.BytesIO(b"not a real pdf"),
+        filename="resume.pdf",
+        headers={"content-type": "application/pdf"},
+    )
+    with pytest.raises(HTTPException) as exc_info:
+        validate_pdf(invalid_magic, b"not a real pdf")
+    assert exc_info.value.status_code == 400

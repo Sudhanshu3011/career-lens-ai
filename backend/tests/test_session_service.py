@@ -1,7 +1,8 @@
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.db.models import Base, AnalysisSession
+from app.core.database import Base
+from app.models.db.session import AnalysisSession
 from app.services.session_service import SessionService
 
 
@@ -81,3 +82,28 @@ def test_session_service_pipeline_steps(db_session):
     assert "scorecard" in jobs_res
     assert jobs_res["scorecard"]["final_score"] > 0
     assert session.status == "completed"
+
+
+def test_session_repository_crud(db_session):
+    from app.repositories.session_repository import SessionRepository
+
+    sess = SessionRepository.create(
+        db=db_session,
+        filename="alice_resume.pdf",
+        extracted_text="Alice Doe, Python backend engineer with 4 years experience.",
+        job_description="Python engineer wanted.",
+    )
+    assert sess.id is not None
+    assert sess.status == "pending"
+
+    retrieved = SessionRepository.get_by_id(db_session, sess.id)
+    assert retrieved is not None
+    assert retrieved.resume_filename == "alice_resume.pdf"
+
+    recent = SessionRepository.list_recent(db_session, limit=5)
+    assert len(recent) >= 1
+    assert any(s.id == sess.id for s in recent)
+
+    sess.status = "completed"
+    saved = SessionRepository.save(db_session, sess)
+    assert saved.status == "completed"

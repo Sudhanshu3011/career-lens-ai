@@ -1,15 +1,24 @@
+"""
+CareerLens AI - Session Service
+Manages session lifecycle and step-by-step sequential execution
+persisting intermediate outputs with deterministic, sub-second latency.
+"""
+
+from __future__ import annotations
+
 import json
 import re
 import time
-from typing import Dict, Any, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
-from app.db.models import AnalysisSession
-from app.tools.pdf_extractor import extract_text
-from app.tools.deterministic_parser import parse_resume_from_text
-from app.tools.tech_keyword_extractor import extract_tech_keywords
-from app.tools.candidate_scorer import score_resume_against_jd
+from app.models.db.session import AnalysisSession
+from app.repositories.session_repository import SessionRepository
+from app.engines.parser.pdf_parser import extract_text
+from app.engines.parser.deterministic_parser import parse_resume_from_text
+from app.engines.extraction.tech_keywords import extract_tech_keywords
+from app.engines.evaluation.candidate_scorer import score_resume_against_jd
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -32,6 +41,52 @@ def _extract_status_code(exc: Exception) -> int:
     return 500
 
 
+def _normalize_candidate_item(cand: Any) -> Dict[str, Any]:
+    """Normalizes candidate object or dict into structured attributes for batch arena screening."""
+    cand_skills = cand.skills if hasattr(cand, "skills") else cand.get("skills", [])
+    cloud_devops_keywords = {
+        "docker",
+        "kubernetes",
+        "aws",
+        "gcp",
+        "azure",
+        "git",
+        "linux",
+        "postgresql",
+        "redis",
+        "mongodb",
+    }
+    tools = [s for s in cand_skills if s.lower() in cloud_devops_keywords]
+
+    ai_keywords = ["ai", "ml", "torch", "yolo", "vision", "learning"]
+    is_aiml = any(k in s.lower() for s in cand_skills for k in ai_keywords)
+    domains = (
+        ["Artificial Intelligence", "Machine Learning"]
+        if is_aiml
+        else ["Software Engineering", "Backend"]
+    )
+
+    return {
+        "id": cand.id if hasattr(cand, "id") else cand.get("id", ""),
+        "name": cand.name if hasattr(cand, "name") else cand.get("name", ""),
+        "title": cand.title if hasattr(cand, "title") else cand.get("title", ""),
+        "summary": (
+            cand.summary if hasattr(cand, "summary") else cand.get("summary", "")
+        ),
+        "education": (
+            cand.education if hasattr(cand, "education") else cand.get("education", "")
+        ),
+        "experience": (
+            cand.experience_text
+            if hasattr(cand, "experience_text")
+            else cand.get("experience_text", "")
+        ),
+        "skills": cand_skills,
+        "tools": tools,
+        "domains": domains,
+    }
+
+
 class SessionService:
     """
     Manages session lifecycle and step-by-step sequential execution
@@ -46,93 +101,162 @@ class SessionService:
         filename: str,
         job_description: str,
     ) -> AnalysisSession:
-        extracted = extract_text(file_bytes)
+        """Creates analysis session by extracting text safely from uploaded PDF bytes."""
+        try:
+            extracted = extract_text(file_bytes)
+        except Exception as exc:
+            logger.warning(f"PDF text extraction failed for '{filename}': {exc}")
+            raise HTTPException(
+                status_code=400,
+                detail=f"Could not extract text from '{filename}'. Please ensure the PDF is not corrupted and contains extractable text.",
+            )
+
         if not extracted or len(extracted.strip()) < 50:
             raise HTTPException(
                 status_code=400,
                 detail="Extracted text is too short or empty. Please ensure the PDF contains readable text.",
             )
 
-        session = AnalysisSession(
-            resume_filename=filename,
+        session = SessionRepository.create(
+            db=db,
+            filename=filename,
             extracted_text=extracted,
             job_description=job_description.strip(),
-            status="pending",
-            current_step=1,
         )
-        db.add(session)
-        db.commit()
-        db.refresh(session)
-        logger.info(f"Created zero-LLM analysis session id='{session.id}' for '{filename}'")
+        logger.info(
+            f"Created zero-LLM analysis session id='{session.id}' for '{filename}'"
+        )
         return session
 
     @staticmethod
+    def create_session_from_text(
+        db: Session,
+        extracted_text: str,
+        filename: str,
+        job_description: str,
+    ) -> AnalysisSession:
+        """Creates analysis session directly from pre-extracted text."""
+        if not extracted_text or len(extracted_text.strip()) < 50:
+            raise HTTPException(
+                status_code=400,
+                detail="Extracted text is too short or empty. Please ensure the PDF contains readable text.",
+            )
+
+        return SessionRepository.create(
+            db=db,
+            filename=filename,
+            extracted_text=extracted_text,
+            job_description=job_description.strip(),
+        )
+
+    @staticmethod
     def get_session(db: Session, session_id: str) -> AnalysisSession:
-        session = db.query(AnalysisSession).filter(AnalysisSession.id == session_id).first()
+        session = SessionRepository.get_by_id(db, session_id)
         if not session:
-            raise HTTPException(status_code=404, detail=f"Session '{session_id}' not found.")
+            raise HTTPException(
+                status_code=404, detail=f"Session '{session_id}' not found."
+            )
         return session
 
     @staticmethod
     def list_sessions(db: Session, limit: int = 20) -> List[AnalysisSession]:
-        return (
-            db.query(AnalysisSession)
-            .order_by(AnalysisSession.created_at.desc())
-            .limit(limit)
-            .all()
+        return SessionRepository.list_recent(db=db, limit=limit)
+
+    @staticmethod
+    def _execute_step_transaction(
+        db: Session,
+        session_id: str,
+        step_number: int,
+        step_name: str,
+        next_step: int,
+        success_status: str,
+        json_attr_name: Optional[str],
+        compute_fn: Callable[[AnalysisSession], Any],
+        prerequisite_check: Optional[Callable[[AnalysisSession], Optional[str]]] = None,
+    ) -> Any:
+        """
+        Standardized transaction wrapper for executing session steps.
+        Enforces prerequisites, commits result, updates state, and centralizes error handling.
+        """
+        session = SessionService.get_session(db, session_id)
+        if prerequisite_check:
+            error_msg = prerequisite_check(session)
+            if error_msg:
+                raise HTTPException(status_code=400, detail=error_msg)
+
+        logger.info(
+            f"[Step {step_number}] Executing {step_name} for session='{session_id}'"
         )
+        try:
+            result = compute_fn(session)
+            if json_attr_name:
+                setattr(session, json_attr_name, json.dumps(result))
+            session.status = success_status
+            session.current_step = next_step
+            session.error_message = None
+            SessionRepository.save(db, session)
+            return result
+        except HTTPException:
+            raise
+        except Exception as exc:
+            logger.exception(f"Step {step_number} failed for session='{session_id}'")
+            try:
+                db.rollback()
+                session.error_message = str(exc)
+                session.status = "failed"
+                SessionRepository.save(db, session)
+            except Exception as save_err:
+                logger.warning(
+                    f"Could not persist failure status for session='{session_id}': {save_err}"
+                )
+            code = _extract_status_code(exc)
+            raise HTTPException(
+                status_code=code,
+                detail=f"Step {step_number} {step_name.lower()} failed [HTTP {code}]: {exc}",
+            )
 
     @staticmethod
     def execute_step_1_parse(db: Session, session_id: str) -> Dict[str, Any]:
         """Step 1: Document Structure & Section Parsing (Layout-Aware Zero-LLM)."""
-        session = SessionService.get_session(db, session_id)
-        logger.info(f"[Step 1] Parsing resume sections for session='{session_id}'")
 
-        try:
-            parsed_sections = parse_resume_from_text(session.extracted_text)
-            if not parsed_sections:
+        def _parse(session: AnalysisSession) -> Dict[str, Any]:
+            parsed = parse_resume_from_text(session.extracted_text)
+            if not parsed:
                 raise ValueError("Deterministic parser returned empty sections.")
+            return parsed
 
-            session.parsed_sections_json = json.dumps(parsed_sections)
-            session.status = "parsed"
-            session.current_step = 2
-            session.error_message = None
-            db.commit()
-            db.refresh(session)
-            return parsed_sections
-        except Exception as exc:
-            logger.exception(f"Step 1 failed for session='{session_id}'")
-            session.error_message = str(exc)
-            session.status = "failed"
-            db.commit()
-            code = _extract_status_code(exc)
-            raise HTTPException(status_code=code, detail=f"Step 1 parsing failed [HTTP {code}]: {exc}")
+        return SessionService._execute_step_transaction(
+            db=db,
+            session_id=session_id,
+            step_number=1,
+            step_name="Parsing",
+            next_step=2,
+            success_status="parsed",
+            json_attr_name="parsed_sections_json",
+            compute_fn=_parse,
+        )
 
     @staticmethod
     def execute_step_2_skills(db: Session, session_id: str) -> Dict[str, Any]:
         """Step 2: Technical Skills Extraction against 450+ IT taxonomy."""
-        session = SessionService.get_session(db, session_id)
-        if not session.parsed_sections_json:
-            raise HTTPException(status_code=400, detail="Step 1 (Parse) must be executed before Step 2.")
 
-        logger.info(f"[Step 2] Extracting skills for session='{session_id}'")
-        try:
+        def _extract(session: AnalysisSession) -> Dict[str, Any]:
             cand_tech = extract_tech_keywords(session.extracted_text)
             jd_tech = extract_tech_keywords(session.job_description)
 
             cand_skills = cand_tech.get("extracted_skills", [])
             jd_skills = jd_tech.get("extracted_skills", [])
-
             cand_lower = {s.lower(): s for s in cand_skills}
             jd_lower = {s.lower(): s for s in jd_skills}
 
             matched_skills = [jd_lower[k] for k in jd_lower if k in cand_lower]
             missing_skills = [jd_lower[k] for k in jd_lower if k not in cand_lower]
-
             skills_by_dom = cand_tech.get("skills_by_domain", {})
-            tools = skills_by_dom.get("Cloud & DevOps", []) + skills_by_dom.get("Databases & Storage", [])
+            tools = skills_by_dom.get("Cloud & DevOps", []) + skills_by_dom.get(
+                "Databases & Storage", []
+            )
 
-            skills_data = {
+            return {
                 "technical_skills": cand_skills,
                 "tools_and_platforms": tools,
                 "domains": list(skills_by_dom.keys()),
@@ -142,34 +266,30 @@ class SessionService:
                 "seniority": cand_tech.get("seniority", "Mid-Level"),
             }
 
-            session.skills_data_json = json.dumps(skills_data)
-            session.status = "skills_extracted"
-            session.current_step = 3
-            session.error_message = None
-            db.commit()
-            db.refresh(session)
-            return skills_data
-        except Exception as exc:
-            logger.exception(f"Step 2 failed for session='{session_id}'")
-            session.error_message = str(exc)
-            session.status = "failed"
-            db.commit()
-            code = _extract_status_code(exc)
-            raise HTTPException(status_code=code, detail=f"Step 2 skills extraction failed [HTTP {code}]: {exc}")
+        return SessionService._execute_step_transaction(
+            db=db,
+            session_id=session_id,
+            step_number=2,
+            step_name="Skills Extraction",
+            next_step=3,
+            success_status="skills_extracted",
+            json_attr_name="skills_data_json",
+            compute_fn=_extract,
+            prerequisite_check=lambda s: (
+                "Step 1 (Parse) must be executed before Step 2."
+                if not s.parsed_sections_json
+                else None
+            ),
+        )
 
     @staticmethod
     def execute_step_3_decision(db: Session, session_id: str) -> Dict[str, Any]:
         """Step 3: Deterministic Scoring & ConvAI Laya 4-Dimension Decision Model."""
-        session = SessionService.get_session(db, session_id)
-        if not session.skills_data_json or not session.parsed_sections_json:
-            raise HTTPException(status_code=400, detail="Steps 1 and 2 must be executed before Step 3.")
 
-        logger.info(f"[Step 3] Computing candidate decision for session='{session_id}'")
-        try:
-            skills_data = json.loads(session.skills_data_json)
-            parsed_sections = json.loads(session.parsed_sections_json)
-
-            decision_res = score_resume_against_jd(
+        def _score(session: AnalysisSession) -> Dict[str, Any]:
+            skills_data = json.loads(session.skills_data_json or "{}")
+            parsed_sections = json.loads(session.parsed_sections_json or "{}")
+            return score_resume_against_jd(
                 resume_data={
                     "tech_skills": skills_data.get("technical_skills", []),
                     "tools_and_platforms": skills_data.get("tools_and_platforms", []),
@@ -182,31 +302,28 @@ class SessionService:
                 job_description=session.job_description,
             )
 
-            session.laya_decision_json = json.dumps(decision_res)
-            session.status = "decision_computed"
-            session.current_step = 4
-            session.error_message = None
-            db.commit()
-            db.refresh(session)
-            return decision_res
-        except Exception as exc:
-            logger.exception(f"Step 3 failed for session='{session_id}'")
-            session.error_message = str(exc)
-            session.status = "failed"
-            db.commit()
-            code = _extract_status_code(exc)
-            raise HTTPException(status_code=code, detail=f"Step 3 decision failed [HTTP {code}]: {exc}")
+        return SessionService._execute_step_transaction(
+            db=db,
+            session_id=session_id,
+            step_number=3,
+            step_name="Decision",
+            next_step=4,
+            success_status="decision_computed",
+            json_attr_name="laya_decision_json",
+            compute_fn=_score,
+            prerequisite_check=lambda s: (
+                "Steps 1 and 2 must be executed before Step 3."
+                if (not s.skills_data_json or not s.parsed_sections_json)
+                else None
+            ),
+        )
 
     @staticmethod
     def execute_step_4_feedback(db: Session, session_id: str) -> Dict[str, Any]:
         """Step 4: Diagnostics & Feedback."""
-        session = SessionService.get_session(db, session_id)
-        if not session.laya_decision_json or not session.skills_data_json:
-            raise HTTPException(status_code=400, detail="Step 3 (Decision) must be executed before Step 4.")
 
-        logger.info(f"[Step 4] Storing completed diagnostics state for session='{session_id}'")
-        try:
-            feedback_data = {
+        def _feedback(session: AnalysisSession) -> Dict[str, Any]:
+            return {
                 "feedback": [],
                 "strengths": [],
                 "growth_areas": [],
@@ -217,63 +334,69 @@ class SessionService:
                 "rejection_flags": [],
             }
 
-            session.feedback_json = json.dumps(feedback_data)
-            session.status = "feedback_ready"
-            session.current_step = 5
-            session.error_message = None
-            db.commit()
-            db.refresh(session)
-            return feedback_data
-        except Exception as exc:
-            logger.exception(f"Step 4 failed for session='{session_id}'")
-            session.error_message = str(exc)
-            session.status = "failed"
-            db.commit()
-            code = _extract_status_code(exc)
-            raise HTTPException(status_code=code, detail=f"Step 4 feedback failed [HTTP {code}]: {exc}")
+        return SessionService._execute_step_transaction(
+            db=db,
+            session_id=session_id,
+            step_number=4,
+            step_name="Feedback",
+            next_step=5,
+            success_status="feedback_ready",
+            json_attr_name="feedback_json",
+            compute_fn=_feedback,
+            prerequisite_check=lambda s: (
+                "Step 3 (Decision) must be executed before Step 4."
+                if (not s.laya_decision_json or not s.skills_data_json)
+                else None
+            ),
+        )
 
     @staticmethod
     def execute_step_5_jobs(db: Session, session_id: str) -> Dict[str, Any]:
         """Step 5: Candidate Scorecard & Seniority Opportunity Alignment."""
-        session = SessionService.get_session(db, session_id)
-        if not session.skills_data_json:
-            raise HTTPException(status_code=400, detail="Step 2 (Skills) must be executed before Step 5.")
 
-        logger.info(f"[Step 5] Finalizing candidate evaluation scorecard for session='{session_id}'")
-        try:
-            skills_data = json.loads(session.skills_data_json)
-            decision_data = json.loads(session.laya_decision_json) if session.laya_decision_json else {}
-
+        def _scorecard(session: AnalysisSession) -> Dict[str, Any]:
+            decision_data = json.loads(session.laya_decision_json or "{}")
             scorecard = {
                 "seniority_tier": decision_data.get("seniority_tier", "mid_level"),
                 "seniority_label": decision_data.get("seniority_label", "Mid-Level"),
                 "final_score": decision_data.get("final_score", 7.0),
                 "fit_score": decision_data.get("fit_score", 70.0),
                 "high_hits_count": decision_data.get("high_hits_count", 0),
-                "total_weighted_probability": decision_data.get("total_weighted_probability", 0.70),
-                "overall_decision": decision_data.get("overall_decision", "Moderate match"),
+                "total_weighted_probability": decision_data.get(
+                    "total_weighted_probability", 0.70
+                ),
+                "overall_decision": decision_data.get(
+                    "overall_decision", "Moderate match"
+                ),
                 "breakdown": decision_data.get("breakdown", {}),
             }
-
+            # Maintain backward compatibility with jobs_data as an array
             session.jobs_json = json.dumps([])
-            session.status = "completed"
-            session.error_message = None
-            db.commit()
-            db.refresh(session)
             return {"jobs": [], "scorecard": scorecard}
-        except Exception as exc:
-            logger.exception(f"Step 5 failed for session='{session_id}'")
-            session.error_message = str(exc)
-            session.status = "failed"
-            db.commit()
-            code = _extract_status_code(exc)
-            raise HTTPException(status_code=code, detail=f"Step 5 jobs fetch failed [HTTP {code}]: {exc}")
+
+        return SessionService._execute_step_transaction(
+            db=db,
+            session_id=session_id,
+            step_number=5,
+            step_name="Jobs Fetch",
+            next_step=5,
+            success_status="completed",
+            json_attr_name=None,
+            compute_fn=_scorecard,
+            prerequisite_check=lambda s: (
+                "Step 2 (Skills) must be executed before Step 5."
+                if not s.skills_data_json
+                else None
+            ),
+        )
 
     @staticmethod
     def run_all_steps(db: Session, session_id: str) -> Dict[str, Any]:
         """Executes all pending steps 1 through 5 sequentially without LLM calls."""
         session = SessionService.get_session(db, session_id)
-        logger.info(f"Running all remaining zero-LLM steps for session='{session_id}' (starting at step {session.current_step})")
+        logger.info(
+            f"Running all remaining zero-LLM steps for session='{session_id}' (starting at step {session.current_step})"
+        )
 
         if not session.parsed_sections_json:
             SessionService.execute_step_1_parse(db, session_id)
@@ -299,59 +422,45 @@ class SessionService:
         }
 
     @staticmethod
-    def batch_screen_candidates(job_description: str, candidates: List[Any]) -> Dict[str, Any]:
+    def batch_screen_candidates(
+        job_description: str, candidates: List[Any]
+    ) -> Dict[str, Any]:
         """Evaluates batch candidate profiles against job requirements with sub-second decision latency."""
         results = []
         total_start = time.perf_counter()
 
-        for cand in candidates:
+        for raw_cand in candidates:
             cand_start = time.perf_counter()
-            cand_skills = cand.skills if hasattr(cand, "skills") else cand.get("skills", [])
-            candidate_skills = {
-                "technical_skills": cand_skills,
-                "tools_and_platforms": [
-                    s for s in cand_skills
-                    if s.lower() in ["docker", "kubernetes", "aws", "gcp", "azure", "git", "linux", "postgresql", "redis", "mongodb"]
-                ],
-                "domains": (
-                    ["Artificial Intelligence", "Machine Learning"]
-                    if any(k in s.lower() for s in cand_skills for k in ["ai", "ml", "torch", "yolo", "vision", "learning"])
-                    else ["Software Engineering", "Backend"]
-                ),
-            }
-            exp_text = cand.experience_text if hasattr(cand, "experience_text") else cand.get("experience_text", "")
-            cand_id = cand.id if hasattr(cand, "id") else cand.get("id", "")
-            cand_name = cand.name if hasattr(cand, "name") else cand.get("name", "")
-            cand_title = cand.title if hasattr(cand, "title") else cand.get("title", "")
-            cand_summary = cand.summary if hasattr(cand, "summary") else cand.get("summary", "")
-            cand_edu = cand.education if hasattr(cand, "education") else cand.get("education", "")
+            cand = _normalize_candidate_item(raw_cand)
 
             decision = score_resume_against_jd(
                 resume_data={
-                    "tech_skills": candidate_skills.get("technical_skills", []),
-                    "tools_and_platforms": candidate_skills.get("tools_and_platforms", []),
-                    "domains": candidate_skills.get("domains", []),
-                    "experience": exp_text,
-                    "summary": cand_summary,
-                    "education": cand_edu,
+                    "tech_skills": cand["skills"],
+                    "tools_and_platforms": cand["tools"],
+                    "domains": cand["domains"],
+                    "experience": cand["experience"],
+                    "summary": cand["summary"],
+                    "education": cand["education"],
                 },
                 job_description=job_description,
             )
             cand_latency_ms = round((time.perf_counter() - cand_start) * 1000, 1)
             logger.info(
-                f"Candidate arena screened: '{cand_name}' ({cand_id}) in {cand_latency_ms}ms "
+                f"Candidate arena screened: '{cand['name']}' ({cand['id']}) in {cand_latency_ms}ms "
                 f"-> Score={decision.get('fit_score', 0)}%, Decision='{decision.get('overall_decision', '')}'"
             )
 
-            results.append({
-                "candidate_id": cand_id,
-                "name": cand_name,
-                "title": cand_title,
-                "skills": cand_skills,
-                "summary": cand_summary,
-                "latency_ms": cand_latency_ms,
-                "decision": decision,
-            })
+            results.append(
+                {
+                    "candidate_id": cand["id"],
+                    "name": cand["name"],
+                    "title": cand["title"],
+                    "skills": cand["skills"],
+                    "summary": cand["summary"],
+                    "latency_ms": cand_latency_ms,
+                    "decision": decision,
+                }
+            )
 
         results.sort(key=lambda x: x["decision"].get("final_score", 0), reverse=True)
         total_latency_ms = round((time.perf_counter() - total_start) * 1000, 1)

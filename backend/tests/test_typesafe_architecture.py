@@ -4,20 +4,25 @@ Validates Choice, Score, and Noul primitives, structured JobProfile, hard gates,
 """
 
 import pytest
-from app.jev.client import jev_client
-from app.jev.rubric import RESUME_RUBRIC_V1, seniority_score_to_label
-from app.jev.questions import build_jd_questions, build_requirement_questions
-from app.models.job_profile import JobProfile, RequirementItem
-from app.models.candidate_profile import CandidateProfile, ResumeBlock
-from app.models.evidence import Evidence, EvidenceAssessment
-from app.evaluation.seniority_evaluator import evaluate_seniority_gap, compute_seniority_fit_percentage
-from app.evaluation.composite_score import calculate_composite_decision
-from app.extraction.jd_extractor import extract_job_profile
+from app.engines.jev.client import jev_client
+from app.engines.jev.rubric import RESUME_RUBRIC_V1, seniority_score_to_label
+from app.engines.jev.questions import build_jd_questions, build_requirement_questions
+from app.models.domain.job import JobProfile, RequirementItem
+from app.models.domain.candidate import CandidateProfile, ResumeBlock
+from app.models.domain.evidence import Evidence, EvidenceAssessment
+from app.engines.evaluation.seniority_evaluator import (
+    evaluate_seniority_gap,
+    compute_seniority_fit_percentage,
+)
+from app.engines.evaluation.composite_score import calculate_composite_decision
+from app.engines.extraction.jd_extractor import extract_job_profile
 
 
 def test_jev_primitives_structure():
     """Validates that Jev client returns valid Choice, Score, and Noul structures."""
-    state = {"text": "Senior Machine Learning Engineer with 6 years experience deploying PyTorch models."}
+    state = {
+        "text": "Senior Machine Learning Engineer with 6 years experience deploying PyTorch models."
+    }
     questions = {
         "seniority": {
             "type": "score",
@@ -32,7 +37,7 @@ def test_jev_primitives_structure():
             "type": "choice",
             "instructions": "Identify the primary role family.",
             "criteria": RESUME_RUBRIC_V1["role_families"],
-        }
+        },
     }
     answers = jev_client.predict(state, questions)
 
@@ -70,20 +75,21 @@ def test_seniority_gap_continuous_calculation():
 def test_hard_requirement_gate_veto():
     """Validates that failing a mandatory hard requirement vetoes candidate to REJECT."""
     seniority = evaluate_seniority_gap(jd_score=2.0, candidate_score=2.2)
-    
+
     # Candidate passed all high scores, but failed the mandatory AWS hard gate
     assessment = EvidenceAssessment(
         requirement_name="AWS",
         is_hard_requirement=True,
-        satisfied_probability=0.20, # < 0.40 gate threshold
+        satisfied_probability=0.20,  # < 0.40 gate threshold
         direct_evidence_probability=0.10,
         evidence_strength=1.0,
         relevance_score=1.0,
         confidence=0.85,
         verdict="missing",
     )
-    
-    from app.models.decision import HardRequirementGate
+
+    from app.models.domain.decision import HardRequirementGate
+
     gate = HardRequirementGate(
         requirement_name="AWS",
         passed=False,
@@ -116,7 +122,9 @@ def test_extract_job_profile_structured_normalization():
         "Senior Backend Engineer. Must have: Python, FastAPI, Docker, and AWS. "
         "Minimum 5 years of professional experience required."
     )
-    profile = extract_job_profile(job_description=jd_text, job_role="Senior Backend Engineer")
+    profile = extract_job_profile(
+        job_description=jd_text, job_role="Senior Backend Engineer"
+    )
 
     assert profile.role_title == "Senior Backend Engineer"
     assert profile.seniority_score >= 2.0
@@ -127,6 +135,7 @@ def test_extract_job_profile_structured_normalization():
 def test_official_typesafe_sdk_primitives():
     """Validates typesafe-sdk Choice, Score, Noul invocation with client.system_one()."""
     from typesafe_sdk import Choice, Noul, Score
+
     ticket = "Senior Backend Engineer with 5 years of Python and FastAPI."
     questions = {
         "department": Choice(
@@ -150,3 +159,98 @@ def test_official_typesafe_sdk_primitives():
     assert "seniority" in answers
     assert 0 <= answers["seniority"]["score"] <= 2
     assert "is_urgent" in answers
+
+
+def test_laya_local_dual_pipeline():
+    """Validates that laya_local pipeline processes evaluation without error."""
+    from app.services.typesafe_pipeline import evaluate_candidate_typesafe
+    from app.engines.laya.client import laya_client
+
+    # Verify laya client predict works with same primitives
+    state = {
+        "text": "Senior ML Engineer with 6 years experience in Python and PyTorch."
+    }
+    questions = {
+        "seniority": {
+            "type": "score",
+            "instructions": "Rate seniority",
+            "criteria": RESUME_RUBRIC_V1["seniority_levels"],
+        },
+        "has_pytorch": {
+            "type": "noul",
+            "instructions": "Candidate knows PyTorch",
+        },
+    }
+    answers = laya_client.predict(state, questions)
+    assert "seniority" in answers
+    assert answers["seniority"]["type"] == "score"
+    assert "has_pytorch" in answers
+
+    # Verify full evaluate_candidate_typesafe with pipeline_mode="laya_local"
+    jd_profile = extract_job_profile(
+        job_description="Senior Python & PyTorch Engineer with 5+ years experience.",
+        job_role="Senior AI Engineer",
+        pipeline_mode="laya_local",
+    )
+    mock_pdf = b"%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF"
+    record = evaluate_candidate_typesafe(
+        pdf_bytes=mock_pdf,
+        filename="test_applicant.pdf",
+        job_profile=jd_profile,
+        idx=0,
+        pipeline_mode="laya_local",
+    )
+    assert "fit_score" in record
+    assert "decision" in record
+    assert record["decision"] in ("SELECT", "BORDERLINE", "REJECT")
+
+
+def test_decomposed_typesafe_pipeline_subfunctions():
+    """Unit tests for newly modularized typesafe_pipeline subfunctions."""
+    from app.services.typesafe_pipeline import (
+        _compute_technical_overlap,
+        _evaluate_seniority_primitive,
+        _build_hard_gate_rejection_record,
+    )
+
+    # 1. Test _compute_technical_overlap
+    raw_text = "Experienced with Python, FastAPI, Docker, and Kubernetes."
+    required = ["Python", "FastAPI", "AWS"]
+    overlap_dict, cand_skills, tools, domains, pct = _compute_technical_overlap(
+        raw_text, required
+    )
+    assert pct > 0.0
+    assert "Python" in overlap_dict["matched_skills"]
+    assert "Docker" in tools or "Docker" in cand_skills
+
+    # 2. Test _evaluate_seniority_primitive
+    score, conf, label = _evaluate_seniority_primitive(
+        pipeline_mode="typesafe",
+        exp_text="5 years as a senior engineer",
+        summary_text="Senior backend specialist",
+        edu_text="B.S. in Computer Science",
+    )
+    assert 0.0 <= score <= 6.0
+    assert 0.0 <= conf <= 1.0
+    assert isinstance(label, str)
+
+    # 3. Test _build_hard_gate_rejection_record
+    rejection = _build_hard_gate_rejection_record(
+        idx=0,
+        filename="corrupt_applicant.pdf",
+        candidate_name="Test Applicant",
+        tech_overlap_pct=10.0,
+        technical_overlap={"matched_skills": [], "missing_jd_skills": ["Python"]},
+        cand_skills=[],
+        tools=[],
+        domains=[],
+        sections_info={
+            "summary_text": "",
+            "exp_text": "",
+            "edu_text": "",
+            "contact_info": {},
+        },
+    )
+    assert rejection["decision"] == "REJECT"
+    assert rejection["fit_score"] == 0.0
+    assert rejection["rejection_reason"] == "does_not_fit_role"

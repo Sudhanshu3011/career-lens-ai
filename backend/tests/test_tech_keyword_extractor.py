@@ -1,10 +1,12 @@
 import time
 import pytest
-from app.tools.tech_keyword_extractor import extract_tech_keywords
+from app.engines.extraction.tech_keywords import extract_tech_keywords
 
 
 def test_special_symbols_extraction():
-    text = "Core technologies: C++, C#, .NET Core, CI/CD with GitHub Actions and Docker."
+    text = (
+        "Core technologies: C++, C#, .NET Core, CI/CD with GitHub Actions and Docker."
+    )
     res = extract_tech_keywords(text)
     skills = res["extracted_skills"]
 
@@ -23,7 +25,7 @@ def test_synonym_normalization():
 
     assert "Kubernetes" in skills  # normalized from k8s
     assert "PostgreSQL" in skills  # normalized from postgres
-    assert "React" in skills       # normalized from reactjs
+    assert "React" in skills  # normalized from reactjs
     assert "Microservices" in skills
 
 

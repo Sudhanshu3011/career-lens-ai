@@ -1,6 +1,6 @@
 import time
 import pytest
-from app.tools.deterministic_parser import (
+from app.engines.parser.deterministic_parser import (
     parse_resume_from_text,
     extract_contact_info,
     extract_candidate_name,
@@ -81,11 +81,15 @@ def test_header_classification():
     assert conf >= 60.0
 
     # Negative cases: bullet points and action sentences must NOT be classified as headers
-    sec, conf = classify_section_header("- Architected multi-agent streaming pipelines using FastAPI")
+    sec, conf = classify_section_header(
+        "- Architected multi-agent streaming pipelines using FastAPI"
+    )
     assert sec is None
     assert conf == 0.0
 
-    sec, conf = classify_section_header("Experienced software engineer with 5 years of background.")
+    sec, conf = classify_section_header(
+        "Experienced software engineer with 5 years of background."
+    )
     assert sec is None
     assert conf == 0.0
 
@@ -111,7 +115,7 @@ def test_full_text_resume_parsing():
 
 def test_real_aiml_pdf_parsing():
     import os
-    from app.tools.deterministic_parser import parse_resume_from_pdf
+    from app.engines.parser.deterministic_parser import parse_resume_from_pdf
 
     pdf_path = "/tmp/AIML_resume.pdf"
     if not os.path.exists(pdf_path):
@@ -150,7 +154,7 @@ def test_academic_table_header_classification():
 
 def test_multi_column_resume_parsing():
     import os
-    from app.tools.deterministic_parser import parse_resume_from_pdf
+    from app.engines.parser.deterministic_parser import parse_resume_from_pdf
 
     pdf_path = "/tmp/resume/adarsh_ambastha.pdf"
     if os.path.exists(pdf_path):
@@ -164,5 +168,3 @@ def test_multi_column_resume_parsing():
         assert "Tender AI" in parsed["projects"]
         assert "Master of Science" in parsed["education"]
         assert parsed["contact_info"]["portfolio"] == "www.drcsystems.com"
-
-

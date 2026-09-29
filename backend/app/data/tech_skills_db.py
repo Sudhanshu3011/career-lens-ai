@@ -9,7 +9,7 @@ Designed for deterministic, instant (<5ms) keyword extraction, normalization,
 and engineering role affinity prediction.
 """
 
-from typing import Any, Dict, List, Set, Tuple
+from typing import Dict, List
 
 # ---------------------------------------------------------------------------
 # 1. Tech Skills Taxonomy by Domain
@@ -69,33 +69,63 @@ TECH_DOMAINS: Dict[str, Dict[str, List[str]]] = {
         "Express.js": ["express", "express.js", "expressjs"],
         "NestJS": ["nestjs", "nest.js"],
         "Spring Boot": ["spring boot", "springboot", "spring framework", "spring"],
-        "ASP.NET Core": ["asp.net", "asp.net core", ".net core", "dotnet core", ".net", "dotnet"],
+        "ASP.NET Core": [
+            "asp.net",
+            "asp.net core",
+            ".net core",
+            "dotnet core",
+            ".net",
+            "dotnet",
+        ],
         "Ruby on Rails": ["ruby on rails", "rails"],
         "Laravel": ["laravel"],
         "GraphQL": ["graphql", "apollo graphql"],
         "REST API": ["rest", "restful", "rest api", "restful apis"],
         "gRPC": ["grpc", "protobuf", "protocol buffers"],
         "WebSocket": ["websocket", "websockets", "socket.io"],
-        "Microservices": ["microservices", "microservice architecture", "distributed systems"],
+        "Microservices": [
+            "microservices",
+            "microservice architecture",
+            "distributed systems",
+        ],
         "Celery": ["celery"],
         "RabbitMQ": ["rabbitmq"],
         "Apache Kafka": ["kafka", "apache kafka"],
     },
     "ai_ml_data_science": {
         "Machine Learning": ["machine learning", "ml"],
-        "Deep Learning": ["deep learning", "dl", "neural networks", "artificial neural networks", "ann", "cnn", "rnn", "lstm"],
+        "Deep Learning": [
+            "deep learning",
+            "dl",
+            "neural networks",
+            "artificial neural networks",
+            "ann",
+            "cnn",
+            "rnn",
+            "lstm",
+        ],
         "PyTorch": ["pytorch", "torch"],
         "TensorFlow": ["tensorflow", "tf"],
         "Keras": ["keras"],
         "Scikit-Learn": ["scikit-learn", "sklearn", "scikit"],
         "Pandas": ["pandas"],
         "NumPy": ["numpy"],
-        "OpenCV": ["opencv", "computer vision", "cv", "object detection", "image processing"],
+        "OpenCV": [
+            "opencv",
+            "computer vision",
+            "cv",
+            "object detection",
+            "image processing",
+        ],
         "YOLO": ["yolo", "yolov8", "yolov5", "yolov7", "yolov9", "yolov10", "yolo11"],
         "MediaPipe": ["mediapipe"],
         "XGBoost": ["xgboost"],
         "LightGBM": ["lightgbm"],
-        "Natural Language Processing": ["nlp", "natural language processing", "text processing"],
+        "Natural Language Processing": [
+            "nlp",
+            "natural language processing",
+            "text processing",
+        ],
         "Hugging Face": ["hugging face", "huggingface", "transformers"],
         "Matplotlib": ["matplotlib"],
         "Seaborn": ["seaborn"],
@@ -105,8 +135,17 @@ TECH_DOMAINS: Dict[str, Dict[str, List[str]]] = {
         "LangChain": ["langchain"],
         "LangGraph": ["langgraph"],
         "LlamaIndex": ["llamaindex"],
-        "RAG": ["rag", "retrieval-augmented generation", "retrieval augmented generation"],
-        "Vector Databases": ["vector database", "vector databases", "vector db", "vector store"],
+        "RAG": [
+            "rag",
+            "retrieval-augmented generation",
+            "retrieval augmented generation",
+        ],
+        "Vector Databases": [
+            "vector database",
+            "vector databases",
+            "vector db",
+            "vector store",
+        ],
         "Pinecone": ["pinecone"],
         "ChromaDB": ["chromadb", "chroma"],
         "Faiss": ["faiss", "faiss-cpu", "faiss-gpu"],
@@ -121,7 +160,13 @@ TECH_DOMAINS: Dict[str, Dict[str, List[str]]] = {
         "Groq API": ["groq", "groq api"],
         "OpenAI API": ["openai", "openai api", "gpt-4", "gpt-4o", "chatgpt"],
         "Anthropic API": ["anthropic", "claude api"],
-        "Agentic AI": ["agentic ai", "ai agents", "multi-agent systems", "crewai", "autogen"],
+        "Agentic AI": [
+            "agentic ai",
+            "ai agents",
+            "multi-agent systems",
+            "crewai",
+            "autogen",
+        ],
     },
     "databases": {
         "PostgreSQL": ["postgresql", "postgres", "psql"],
@@ -174,7 +219,13 @@ TECH_DOMAINS: Dict[str, Dict[str, List[str]]] = {
         "dbt": ["dbt", "data build tool"],
         "Hadoop": ["hadoop", "apache hadoop", "hdfs"],
         "Databricks": ["databricks"],
-        "ETL/ELT": ["etl", "elt", "data pipeline", "data pipelines", "data warehousing"],
+        "ETL/ELT": [
+            "etl",
+            "elt",
+            "data pipeline",
+            "data pipelines",
+            "data warehousing",
+        ],
         "Delta Lake": ["delta lake"],
         "Apache Hive": ["hive", "apache hive"],
         "Presto": ["presto", "trino"],
@@ -237,8 +288,7 @@ TECH_DOMAINS: Dict[str, Dict[str, List[str]]] = {
         "Truffle": ["truffle"],
         "IPFS": ["ipfs"],
         "DeFi": ["defi", "decentralized finance"],
-    }
-    ,
+    },
     "generative_ai": {
         "Generative AI": ["generative ai", "genai", "gen ai"],
         "Prompt Engineering": ["prompt engineering", "prompt design"],
@@ -248,30 +298,41 @@ TECH_DOMAINS: Dict[str, Dict[str, List[str]]] = {
         "Neural Networks": ["neural network", "nn", "neural networks"],
         "GAN": ["gan", "generative adversarial network"],
         "VAE": ["vae", "variational autoencoder"],
-        "Large Language Models": ["large language model", "llm", "gpt", "gpt-3", "gpt-4"]
+        "Large Language Models": [
+            "large language model",
+            "llm",
+            "gpt",
+            "gpt-3",
+            "gpt-4",
+        ],
     },
     "nlp": {
         "Natural Language Processing": ["nlp", "natural language processing"],
         "SpaCy": ["spacy"],
         "NLTK": ["nltk"],
-        "Hugging Face": ["hugging face", "huggingface", "transformers"]
+        "Hugging Face": ["hugging face", "huggingface", "transformers"],
     },
     "cloud_ai_services": {
-        "AWS AI Services": ["aws ai", "amazon sagemaker", "aws polly", "aws comprehend"],
+        "AWS AI Services": [
+            "aws ai",
+            "amazon sagemaker",
+            "aws polly",
+            "aws comprehend",
+        ],
         "Azure AI Services": ["azure ai", "azure cognitive services"],
-        "Google Cloud AI": ["gcp ai", "google cloud ai", "vertex ai"]
+        "Google Cloud AI": ["gcp ai", "google cloud ai", "vertex ai"],
     },
     "data_visualization": {
         "Matplotlib": ["matplotlib"],
         "Seaborn": ["seaborn"],
-        "Plotly": ["plotly"]
+        "Plotly": ["plotly"],
     },
     "speech_voice_ai": {
         "Speech Recognition": ["speech recognition", "speech to text"],
         "Text to Speech": ["text to speech", "tts"],
-        "Omni Channel": ["omni channel"]
+        "Omni Channel": ["omni channel"],
     },
     "statistical_modeling": {
         "Statistical Modeling": ["statistical modeling", "statistics"]
-    }
+    },
 }

@@ -2,13 +2,10 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from app.api.routes import router
-from app.api.session_routes import router as session_router
-from app.api.enterprise_routes import router as enterprise_router
-from app.db.database import init_db
+from app.api.v1.router import api_router
+from app.core.database import init_db
 from app.core.logger import get_logger
 from fastapi.openapi.utils import get_openapi
-
 
 logger = get_logger(__name__)
 
@@ -75,11 +72,9 @@ def root():
     }
 
 
-
-
-app.include_router(router, prefix="/api/v1")
-app.include_router(session_router, prefix="/api/v1")
-app.include_router(enterprise_router, prefix="/api/v1")
+app.include_router(api_router, prefix="/api/v1")
+# Aliased prefix without /v1 for client compatibility
+app.include_router(api_router, prefix="/api")
 
 
 def custom_openapi():
@@ -96,13 +91,19 @@ def custom_openapi():
     for schema_def in schema.get("components", {}).get("schemas", {}).values():
         for prop_name, prop in schema_def.get("properties", {}).items():
             if prop.get("type") == "array" and "items" in prop:
-                if prop_name == "resumes" or prop["items"].get("contentMediaType") == "application/octet-stream":
+                if (
+                    prop_name == "resumes"
+                    or prop["items"].get("contentMediaType")
+                    == "application/octet-stream"
+                ):
                     prop["items"]["format"] = "binary"
-            elif prop.get("contentMediaType") == "application/octet-stream" or prop_name == "resume":
+            elif (
+                prop.get("contentMediaType") == "application/octet-stream"
+                or prop_name == "resume"
+            ):
                 prop["format"] = "binary"
     app.openapi_schema = schema
     return app.openapi_schema
 
 
 app.openapi = custom_openapi
-

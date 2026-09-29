@@ -1,5 +1,5 @@
 import pytest
-from app.tools.candidate_scorer import score_resume_against_jd
+from app.engines.evaluation.candidate_scorer import score_resume_against_jd
 
 
 def test_score_resume_against_jd():

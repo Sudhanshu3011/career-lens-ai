@@ -1,5 +1,8 @@
 import pytest
-from app.tools.candidate_scorer import score_resume_against_jd, ROLE_WEIGHTS
+from app.engines.evaluation.candidate_scorer import (
+    score_resume_against_jd,
+    ROLE_WEIGHTS,
+)
 
 
 def test_five_parameter_weighted_scoring_structure():
@@ -23,7 +26,13 @@ def test_five_parameter_weighted_scoring_structure():
     assert "parameter_evaluations" in result
 
     params = result["parameter_evaluations"]
-    assert set(params.keys()) == {"technical", "experience", "domain", "education", "evidence"}
+    assert set(params.keys()) == {
+        "technical",
+        "experience",
+        "domain",
+        "education",
+        "evidence",
+    }
 
     for p_name, p_data in params.items():
         assert "p_high" in p_data
@@ -67,7 +76,9 @@ def test_dynamic_job_role_injection():
         "experience": "3 years developing scalable REST APIs and database schema migrations.",
         "education": "BS in Computer Science.",
     }
-    job_description = "Looking for a backend engineer to design and maintain robust microservices."
+    job_description = (
+        "Looking for a backend engineer to design and maintain robust microservices."
+    )
 
     result = score_resume_against_jd(
         resume_data=resume_data,

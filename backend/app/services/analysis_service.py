@@ -8,13 +8,13 @@ and career coaching diagnostics.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Dict, List
+from typing import Any, Dict
 from fastapi import HTTPException, UploadFile, status
 
 from app.core.logger import get_logger
-from app.tools.candidate_scorer import score_resume_against_jd
-from app.tools.deterministic_parser import parse_resume_from_pdf
-from app.validator.pdf_validator import validate_pdf
+from app.engines.evaluation.candidate_scorer import score_resume_against_jd
+from app.engines.parser.deterministic_parser import parse_resume_from_pdf
+from app.core.validators import validate_pdf
 
 logger = get_logger(__name__)
 
@@ -38,9 +38,8 @@ def _extract_skills_analysis(parsed_data: Dict[str, Any]) -> Dict[str, Any]:
     tech_skills = parsed_data.get("tech_skills", [])
     skills_by_domain = parsed_data.get("skills_by_domain", {})
 
-    tools = (
-        skills_by_domain.get("DevOps & Cloud", [])
-        + skills_by_domain.get("Big Data & Distributed Computing", [])
+    tools = skills_by_domain.get("DevOps & Cloud", []) + skills_by_domain.get(
+        "Big Data & Distributed Computing", []
     )
     domains = list(skills_by_domain.keys())
 
@@ -114,3 +113,13 @@ async def run_full_resume_analysis(
         )
 
 
+class AnalysisService:
+    """Service facade for resume analysis workflows."""
+
+    @staticmethod
+    async def analyze_resume(
+        resume: UploadFile, job_description: str
+    ) -> Dict[str, Any]:
+        return await run_full_resume_analysis(resume, job_description)
+
+    run_full_resume_analysis = staticmethod(run_full_resume_analysis)
